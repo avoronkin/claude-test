@@ -1,0 +1,53 @@
+{
+  "name": "tic-tac-toe-lib",
+  "version": "1.0.0",
+  "description": "A TypeScript library for tic-tac-toe game logic with immutable state management",
+  "main": "dist/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/index.d.ts",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "build": "npm run build:cjs && npm run build:esm",
+    "build:cjs": "tsc",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage --coverageReporters=text --coverageReporters=cobertura",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist coverage",
+    "ci": "npm run lint && npm run typecheck && npm run test:coverage && npm run build",
+    "prepublishOnly": "npm run ci"
+  },
+  "keywords": ["tic-tac-toe", "typescript", "game", "immutable", "library"],
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/your-username/tic-tac-toe-lib.git"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/your-username/tic-tac-toe-lib/-/issues"
+  },
+  "homepage": "https://gitlab.com/your-username/tic-tac-toe-lib#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "type": "commonjs",
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^12.1.4",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.2.0",
+    "@typescript-eslint/eslint-plugin": "^8.38.0",
+    "@typescript-eslint/parser": "^8.38.0",
+    "eslint": "^9.32.0",
+    "jest": "^30.0.5",
+    "rollup": "^4.46.2",
+    "terser": "^5.43.1",
+    "ts-jest": "^29.4.1",
+    "typescript": "^5.8.3"
+  }
+}

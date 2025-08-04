@@ -1,0 +1,15 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.15.0/.schema/devbox.schema.json",
+  "packages": [
+    "nodejs@latest",
+    "claude-code@1.0.60",
+    "uv@latest"
+  ],
+  "shell": {
+    "init_hook": [
+      "claude mcp add --transport http context7 https://mcp.context7.com/mcp",
+      "claude mcp add serena -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context ide-assistant --project $(pwd)",
+      "claude mcp add sequential-thinking -s user -- npx -y u/modelcontextprotocol/server-sequential-thinking"
+    ]
+  }
+}
