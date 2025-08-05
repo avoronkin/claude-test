@@ -33,7 +33,7 @@ Generated from PRD: `/home/alex/projects/pet/new_test/tasks/rock-paper-scissors-
   - [x] 1.3 Clean up index.ts exports to prepare for RPS exports
   - [x] 1.4 Verify build configuration supports stateless library pattern
 
-- [ ] **T002: Core Type System and Error Handling**
+- [x] **T002: Core Type System and Error Handling**
   - [x] 2.1 Simplify RPS types in types.ts (remove stateful RPSGameState, keep essential types)
   - [x] 2.2 Create simple RPSGameResult interface for method return values
   - [x] 2.3 Create custom error classes (InvalidMoveError) in errors.ts
@@ -41,12 +41,12 @@ Generated from PRD: `/home/alex/projects/pet/new_test/tasks/rock-paper-scissors-
   - [x] 2.5 Remove unused complex RPS types (RPSGameState, RPSRound, etc.)
 
 - [ ] **T003: RPS Game Engine Implementation**
-  - [ ] 3.1 Create RockPaperScissors class skeleton with method signatures and TSDoc
-  - [ ] 3.2 Implement move validation and normalization (accept strings, handle case insensitivity)
-  - [ ] 3.3 Implement core game logic (determine winner, create explanatory messages)
-  - [ ] 3.4 Implement playVsComputer method with Math.random() for computer moves
-  - [ ] 3.5 Implement playTwoPlayer method for human vs human games
-  - [ ] 3.6 Add comprehensive TSDoc documentation to all public methods
+  - [x] 3.1 Create RockPaperScissors class skeleton with method signatures and TSDoc
+  - [x] 3.2 Implement move validation and normalization (accept strings, handle case insensitivity)
+  - [x] 3.3 Implement core game logic (determine winner, create explanatory messages)
+  - [x] 3.4 Implement playVsComputer method with Math.random() for computer moves
+  - [x] 3.5 Implement playTwoPlayer method for human vs human games
+  - [x] 3.6 Add comprehensive TSDoc documentation to all public methods
 
 - [ ] **T004: Testing and Quality Assurance**
   - [ ] 4.1 Create RockPaperScissors.test.ts following TDD (write failing tests first)

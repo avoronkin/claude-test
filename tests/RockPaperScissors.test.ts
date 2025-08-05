@@ -1,0 +1,236 @@
+import { RockPaperScissors } from '../src/RockPaperScissors';
+import { InvalidMoveError } from '../src/errors';
+
+describe('RockPaperScissors', () => {
+  let rps: RockPaperScissors;
+
+  beforeEach(() => {
+    rps = new RockPaperScissors();
+  });
+
+  describe('Constructor', () => {
+    test('should create RockPaperScissors instance', () => {
+      expect(rps).toBeInstanceOf(RockPaperScissors);
+    });
+  });
+
+  describe('playTwoPlayer method signature', () => {
+    test('should have playTwoPlayer method', () => {
+      expect(typeof rps.playTwoPlayer).toBe('function');
+    });
+
+    test('should return RPSGameResult', () => {
+      const result = rps.playTwoPlayer('rock', 'scissors');
+      expect(result).toHaveProperty('player1Move');
+      expect(result).toHaveProperty('player2Move');
+      expect(result).toHaveProperty('result');
+      expect(result).toHaveProperty('winner');
+      expect(result).toHaveProperty('explanation');
+    });
+  });
+
+  describe('playVsComputer method signature', () => {
+    test('should have playVsComputer method', () => {
+      expect(typeof rps.playVsComputer).toBe('function');
+    });
+
+    test('should return RPSGameResult', () => {
+      const result = rps.playVsComputer('rock');
+      expect(result).toHaveProperty('playerMove');
+      expect(result).toHaveProperty('computerMove');
+      expect(result).toHaveProperty('result');
+      expect(result).toHaveProperty('winner');
+      expect(result).toHaveProperty('explanation');
+    });
+  });
+
+  describe('validateMove method', () => {
+    test('should have validateMove method', () => {
+      expect(typeof rps.validateMove).toBe('function');
+    });
+
+    test('should accept valid moves in lowercase', () => {
+      expect(rps.validateMove('rock')).toBe('rock');
+      expect(rps.validateMove('paper')).toBe('paper');
+      expect(rps.validateMove('scissors')).toBe('scissors');
+    });
+
+    test('should normalize uppercase moves to lowercase', () => {
+      expect(rps.validateMove('ROCK')).toBe('rock');
+      expect(rps.validateMove('PAPER')).toBe('paper');
+      expect(rps.validateMove('SCISSORS')).toBe('scissors');
+    });
+
+    test('should normalize mixed case moves', () => {
+      expect(rps.validateMove('Rock')).toBe('rock');
+      expect(rps.validateMove('PaPeR')).toBe('paper');
+      expect(rps.validateMove('ScIsSoRs')).toBe('scissors');
+    });
+
+    test('should trim whitespace from moves', () => {
+      expect(rps.validateMove('  rock  ')).toBe('rock');
+      expect(rps.validateMove('\tpaper\n')).toBe('paper');
+      expect(rps.validateMove(' SCISSORS ')).toBe('scissors');
+    });
+
+    test('should throw InvalidMoveError for invalid moves', () => {
+      expect(() => rps.validateMove('invalid')).toThrow(InvalidMoveError);
+      expect(() => rps.validateMove('lizard')).toThrow(InvalidMoveError);
+      expect(() => rps.validateMove('spock')).toThrow(InvalidMoveError);
+    });
+
+    test('should throw InvalidMoveError for empty strings', () => {
+      expect(() => rps.validateMove('')).toThrow(InvalidMoveError);
+      expect(() => rps.validateMove('   ')).toThrow(InvalidMoveError);
+    });
+
+    test('should throw InvalidMoveError for non-string inputs', () => {
+      expect(() => rps.validateMove(null as any)).toThrow(InvalidMoveError);
+      expect(() => rps.validateMove(undefined as any)).toThrow(InvalidMoveError);
+      expect(() => rps.validateMove(123 as any)).toThrow(InvalidMoveError);
+    });
+
+    test('should provide descriptive error messages', () => {
+      expect(() => rps.validateMove('lizard')).toThrow('Invalid move: "lizard" is not a valid move');
+      expect(() => rps.validateMove('')).toThrow('Invalid move: input must be a non-empty string');
+    });
+  });
+
+  describe('Game Logic', () => {
+    describe('determineWinner helper', () => {
+      // Rock beats Scissors
+      test('rock should beat scissors', () => {
+        const result = rps.playTwoPlayer('rock', 'scissors');
+        expect(result.result).toBe('win');
+        expect(result.winner).toBe('player1');
+        expect(result.explanation).toContain('Rock crushes scissors');
+      });
+
+      // Scissors beats Paper
+      test('scissors should beat paper', () => {
+        const result = rps.playTwoPlayer('scissors', 'paper');
+        expect(result.result).toBe('win');
+        expect(result.winner).toBe('player1');
+        expect(result.explanation).toContain('Scissors cuts paper');
+      });
+
+      // Paper beats Rock
+      test('paper should beat rock', () => {
+        const result = rps.playTwoPlayer('paper', 'rock');
+        expect(result.result).toBe('win');
+        expect(result.winner).toBe('player1');
+        expect(result.explanation).toContain('Paper covers rock');
+      });
+
+      // Reverse scenarios (player2 wins)
+      test('player2 rock should beat player1 scissors', () => {
+        const result = rps.playTwoPlayer('scissors', 'rock');
+        expect(result.result).toBe('lose');
+        expect(result.winner).toBe('player2');
+        expect(result.explanation).toContain('Rock crushes scissors');
+      });
+
+      test('player2 scissors should beat player1 paper', () => {
+        const result = rps.playTwoPlayer('paper', 'scissors');
+        expect(result.result).toBe('lose');
+        expect(result.winner).toBe('player2');
+        expect(result.explanation).toContain('Scissors cuts paper');
+      });
+
+      test('player2 paper should beat player1 rock', () => {
+        const result = rps.playTwoPlayer('rock', 'paper');
+        expect(result.result).toBe('lose');
+        expect(result.winner).toBe('player2');
+        expect(result.explanation).toContain('Paper covers rock');
+      });
+
+      // Draw scenarios
+      test('same moves should result in draw', () => {
+        const rockResult = rps.playTwoPlayer('rock', 'rock');
+        expect(rockResult.result).toBe('draw');
+        expect(rockResult.winner).toBeNull();
+        expect(rockResult.explanation).toContain('Both players chose rock');
+
+        const paperResult = rps.playTwoPlayer('paper', 'paper');
+        expect(paperResult.result).toBe('draw');
+        expect(paperResult.winner).toBeNull();
+        expect(paperResult.explanation).toContain('Both players chose paper');
+
+        const scissorsResult = rps.playTwoPlayer('scissors', 'scissors');
+        expect(scissorsResult.result).toBe('draw');
+        expect(scissorsResult.winner).toBeNull();
+        expect(scissorsResult.explanation).toContain('Both players chose scissors');
+      });
+    });
+
+    describe('playVsComputer method', () => {
+      test('should generate random computer moves', () => {
+        const results: string[] = [];
+        // Run 100 games to test randomness
+        for (let i = 0; i < 100; i++) {
+          const result = rps.playVsComputer('rock');
+          if (result.computerMove) {
+            results.push(result.computerMove);
+          }
+        }
+
+        // Check that all three moves appear at least once
+        const uniqueMoves = [...new Set(results)];
+        expect(uniqueMoves.length).toBeGreaterThan(1);
+        expect(uniqueMoves.every(move => ['rock', 'paper', 'scissors'].includes(move))).toBe(true);
+      });
+
+      test('should work with player winning scenarios', () => {
+        // Mock Math.random to return specific values for predictable testing
+        const originalRandom = Math.random;
+        
+        // Test rock vs scissors (player wins)
+        Math.random = jest.fn(() => 0.9); // Should generate scissors
+        const result1 = rps.playVsComputer('rock');
+        expect(result1.playerMove).toBe('rock');
+        expect(result1.computerMove).toBe('scissors');
+        expect(result1.result).toBe('win');
+        expect(result1.winner).toBe('player');
+        expect(result1.explanation).toContain('Rock crushes scissors');
+
+        // Restore original Math.random
+        Math.random = originalRandom;
+      });
+
+      test('should work with computer winning scenarios', () => {
+        const originalRandom = Math.random;
+        
+        // Test rock vs paper (computer wins)
+        Math.random = jest.fn(() => 0.4); // Should generate paper
+        const result = rps.playVsComputer('rock');
+        expect(result.playerMove).toBe('rock');
+        expect(result.computerMove).toBe('paper');
+        expect(result.result).toBe('lose');
+        expect(result.winner).toBe('computer');
+        expect(result.explanation).toContain('Paper covers rock');
+
+        Math.random = originalRandom;
+      });
+
+      test('should work with draw scenarios', () => {
+        const originalRandom = Math.random;
+        
+        // Test rock vs rock (draw)
+        Math.random = jest.fn(() => 0.1); // Should generate rock
+        const result = rps.playVsComputer('rock');
+        expect(result.playerMove).toBe('rock');
+        expect(result.computerMove).toBe('rock');
+        expect(result.result).toBe('draw');
+        expect(result.winner).toBeNull();
+        expect(result.explanation).toContain('Both players chose rock');
+
+        Math.random = originalRandom;
+      });
+
+      test('should validate player input', () => {
+        expect(() => rps.playVsComputer('invalid')).toThrow(InvalidMoveError);
+        expect(() => rps.playVsComputer('')).toThrow(InvalidMoveError);
+      });
+    });
+  });
+});
