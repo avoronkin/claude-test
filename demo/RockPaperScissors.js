@@ -1,4 +1,4 @@
-import { InvalidMoveError } from './errors.js';
+import { InvalidMoveError } from './errors';
 /**
  * A stateless Rock Paper Scissors game implementation.
  *

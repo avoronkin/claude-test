@@ -5,7 +5,7 @@
  * with comprehensive error handling, strict typing, and zero dependencies.
  */
 // Export RPS-specific error classes for proper error handling
-export { RPSError, InvalidMoveError } from './errors.js';
+export { RPSError, InvalidMoveError } from './errors';
 // Export main RockPaperScissors class
-export { RockPaperScissors } from './RockPaperScissors.js';
+export { RockPaperScissors } from './RockPaperScissors';
 //# sourceMappingURL=index.js.map
