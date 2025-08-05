@@ -110,13 +110,16 @@ function playGame(playerMove: RPSMove): void {
     try {
         console.log('🎲 Playing game with move:', playerMove);
         
+        // Clear previous game result immediately when starting new game
+        clearPreviousGameResult();
+        
         // Clear previous selection before starting new game
         clearButtonSelection();
         
         gameState.isPlaying = true;
         updateButtonStates();
         
-        // Add a small delay for better UX
+        // Add a delay for better UX and to show the clearing effect
         setTimeout(() => {
             // Call the library's playVsComputer method
             const result = game.playVsComputer(playerMove);
@@ -125,12 +128,12 @@ function playGame(playerMove: RPSMove): void {
             
             console.log('🎉 Game result:', result);
             
-            // Display game results
-            displayGameResult(result);
+            // Display game results with animation
+            displayGameResultWithAnimation(result);
             
             gameState.isPlaying = false;
             updateButtonStates();
-        }, 100);
+        }, 300); // Increased delay to show clearing effect
         
     } catch (error) {
         console.error('❌ Error playing game:', error);
@@ -194,6 +197,40 @@ function displayGameResult(gameResult: RPSGameResult): void {
 }
 
 /**
+ * Display the game result with smooth animation
+ */
+function displayGameResultWithAnimation(gameResult: RPSGameResult): void {
+    console.log('📊 Displaying game result with animation:', gameResult);
+    
+    // Remove any existing animation classes
+    if (resultArea) {
+        resultArea.classList.remove('fade-out', 'fade-in');
+    }
+    if (initialMessage) {
+        initialMessage.classList.remove('fade-in', 'fade-out');
+    }
+    
+    // Hide initial message with fade out
+    if (initialMessage) {
+        initialMessage.classList.add('fade-out');
+        setTimeout(() => {
+            initialMessage.classList.add('hidden');
+        }, 150);
+    }
+    
+    // Display the result content first (hidden)
+    displayGameResult(gameResult);
+    
+    // Show result area with fade in animation
+    setTimeout(() => {
+        if (resultArea) {
+            resultArea.classList.remove('hidden');
+            resultArea.classList.add('fade-in');
+        }
+    }, 200);
+}
+
+/**
  * Reset the game to initial state
  */
 function resetGame(): void {
@@ -250,6 +287,30 @@ function clearButtonSelection(): void {
     });
     
     console.log('🧹 Button selection cleared');
+}
+
+/**
+ * Clear previous game result immediately when starting new game
+ */
+function clearPreviousGameResult(): void {
+    console.log('🧽 Clearing previous game result');
+    
+    // Hide result area and show initial message
+    if (resultArea) {
+        resultArea.classList.add('hidden');
+        resultArea.classList.add('fade-out');
+    }
+    if (initialMessage) {
+        initialMessage.classList.remove('hidden');
+        initialMessage.classList.add('fade-in');
+    }
+    
+    // Clear result displays immediately
+    clearResultDisplays();
+    
+    // Clear game state
+    currentGameResult = null;
+    gameState.currentResult = null;
 }
 
 /**
