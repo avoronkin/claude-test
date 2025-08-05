@@ -60,7 +60,7 @@ Generated from PRD: `/home/alex/projects/pet/new_test/tasks/rock-paper-scissors-
   - [x] 4.7 Verify 100% test coverage with npm run test:coverage
   - [x] 4.8 Update index.test.ts to test main library exports
 
-- [ ] **T005: Documentation and Final Integration**
+- [x] **T005: Documentation and Final Integration**
   - [x] 5.1 Update index.ts to export RockPaperScissors class and required types
   - [x] 5.2 Update README.md with comprehensive usage examples and API documentation
   - [x] 5.3 Verify build output (npm run build) produces both CommonJS and ES modules
