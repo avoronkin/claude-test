@@ -11,4 +11,5 @@ export type { RPSMove, RPSResult, RPSWinner, RPSGameResult } from './types';
 // Export RPS-specific error classes for proper error handling
 export { RPSError, InvalidMoveError } from './errors';
 
-// Note: RockPaperScissors class export will be added in T003
+// Export main RockPaperScissors class
+export { RockPaperScissors } from './RockPaperScissors';

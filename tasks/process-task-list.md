@@ -12,6 +12,7 @@ Guidelines for managing task lists in markdown files to track progress on comple
   5. Repeat cycle for each new feature or bug fix
 - **Completion protocol:**  
   1. When you finish a **sub‑task**, immediately mark it as completed by changing `[ ]` to `[x]`.
+  2. Once all the subtasks are marked completed and changes have been committed, mark the **parent task** as completed.
   2. If **all** subtasks underneath a parent task are now `[x]`, follow this sequence:
     - **First**: Run the full test suite (`pytest`, `npm test`, `bin/rails test`, etc.)
     - **Only if all tests pass**: Stage changes (`git add .`)
@@ -26,8 +27,6 @@ Guidelines for managing task lists in markdown files to track progress on comple
         ```
         git commit -m "feat: add payment validation logic" -m "- Validates card type and expiry" -m "- Adds unit tests for edge cases" -m "Related to T123 in PRD"
         ```
-  3. Once all the subtasks are marked completed and changes have been committed, mark the **parent task** as completed.
-- Stop after each sub‑task and wait for the user's go‑ahead.
 
 ## Task List Maintenance
 

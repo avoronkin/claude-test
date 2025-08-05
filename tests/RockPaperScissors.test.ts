@@ -233,4 +233,51 @@ describe('RockPaperScissors', () => {
       });
     });
   });
+
+  describe('Performance Requirements', () => {
+    test('playTwoPlayer should complete in less than 1ms', () => {
+      const iterations = 1000;
+      const start = process.hrtime.bigint();
+      
+      for (let i = 0; i < iterations; i++) {
+        rps.playTwoPlayer('rock', 'scissors');
+      }
+      
+      const end = process.hrtime.bigint();
+      const totalTimeMs = Number(end - start) / 1000000; // Convert nanoseconds to milliseconds
+      const avgTimeMs = totalTimeMs / iterations;
+      
+      expect(avgTimeMs).toBeLessThan(1);
+    });
+
+    test('playVsComputer should complete in less than 1ms', () => {
+      const iterations = 1000;
+      const start = process.hrtime.bigint();
+      
+      for (let i = 0; i < iterations; i++) {
+        rps.playVsComputer('rock');
+      }
+      
+      const end = process.hrtime.bigint();
+      const totalTimeMs = Number(end - start) / 1000000;
+      const avgTimeMs = totalTimeMs / iterations;
+      
+      expect(avgTimeMs).toBeLessThan(1);
+    });
+
+    test('validateMove should complete in less than 1ms', () => {
+      const iterations = 10000;
+      const start = process.hrtime.bigint();
+      
+      for (let i = 0; i < iterations; i++) {
+        rps.validateMove('ROCK');
+      }
+      
+      const end = process.hrtime.bigint();
+      const totalTimeMs = Number(end - start) / 1000000;
+      const avgTimeMs = totalTimeMs / iterations;
+      
+      expect(avgTimeMs).toBeLessThan(1);
+    });
+  });
 });

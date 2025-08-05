@@ -1,5 +1,5 @@
 import type { RPSMove, RPSResult, RPSWinner, RPSGameResult } from '../src/index';
-import { RPSError, InvalidMoveError } from '../src/index';
+import { RPSError, InvalidMoveError, RockPaperScissors } from '../src/index';
 
 describe('RPS Library Index exports', () => {
 
@@ -71,5 +71,35 @@ describe('RPS Library Index exports', () => {
     
     expect(vsComputerResult.result).toBe('win');
     expect(vsComputerResult.winner).toBe('player');
+  });
+
+  it('should export RockPaperScissors class', () => {
+    expect(RockPaperScissors).toBeDefined();
+    expect(typeof RockPaperScissors).toBe('function');
+    
+    const rps = new RockPaperScissors();
+    expect(rps).toBeInstanceOf(RockPaperScissors);
+    
+    // Test main methods are available
+    expect(typeof rps.playTwoPlayer).toBe('function');
+    expect(typeof rps.playVsComputer).toBe('function');
+    expect(typeof rps.validateMove).toBe('function');
+  });
+
+  it('should work end-to-end through main exports', () => {
+    const rps = new RockPaperScissors();
+    
+    // Test two player game
+    const twoPlayerResult = rps.playTwoPlayer('Rock', 'Scissors');
+    expect(twoPlayerResult.result).toBe('win');
+    expect(twoPlayerResult.winner).toBe('player1');
+    expect(twoPlayerResult.explanation).toContain('Rock crushes scissors');
+    
+    // Test vs computer game
+    const vsComputerResult = rps.playVsComputer('PAPER');
+    expect(['win', 'lose', 'draw']).toContain(vsComputerResult.result);
+    expect(['player', 'computer', null]).toContain(vsComputerResult.winner);
+    expect(vsComputerResult.playerMove).toBe('paper');
+    expect(['rock', 'paper', 'scissors']).toContain(vsComputerResult.computerMove);
   });
 });
