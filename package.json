@@ -37,7 +37,10 @@
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist coverage",
     "ci": "npm run lint && npm run typecheck && npm run test:coverage && npm run build",
-    "prepublishOnly": "npm run ci"
+    "prepublishOnly": "npm run ci",
+    "demo:build": "npm run build && cp dist/esm/index.js demo/rps-lib.js",
+    "demo:serve": "cd demo && python3 -m http.server 8080",
+    "demo": "npm run demo:build && npm run demo:serve"
   },
   "keywords": [
     "rock-paper-scissors",
