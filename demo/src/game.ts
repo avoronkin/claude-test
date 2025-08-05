@@ -1,26 +1,26 @@
-// Import RockPaperScissors class from compiled library (Task 3.1)
-import { RockPaperScissors } from './index.js';
+// Import RockPaperScissors class and types from the compiled library
+import { RockPaperScissors, type RPSGameResult, type RPSMove } from '../../dist/esm/index.js';
 
 console.log('🎮 Game script loaded');
 
 // Game instance and DOM elements
-let game;
-let currentGameResult = null;
+let game: RockPaperScissors;
+let currentGameResult: RPSGameResult | null = null;
 
 // DOM element references
-const moveButtons = document.querySelectorAll('.move-btn');
-const playAgainBtn = document.getElementById('play-again-btn');
-const resultArea = document.getElementById('result-area');
-const initialMessage = document.getElementById('initial-message');
-const resultText = document.getElementById('result-text');
-const resultExplanation = document.getElementById('result-explanation');
-const playerMoveIcon = document.getElementById('player-move-icon');
-const playerMoveText = document.getElementById('player-move-text');
-const computerMoveIcon = document.getElementById('computer-move-icon');
-const computerMoveText = document.getElementById('computer-move-text');
+const moveButtons = document.querySelectorAll('.move-btn') as NodeListOf<HTMLButtonElement>;
+const playAgainBtn = document.getElementById('play-again-btn') as HTMLButtonElement;
+const resultArea = document.getElementById('result-area') as HTMLElement;
+const initialMessage = document.getElementById('initial-message') as HTMLElement;
+const resultText = document.getElementById('result-text') as HTMLElement;
+const resultExplanation = document.getElementById('result-explanation') as HTMLElement;
+const playerMoveIcon = document.getElementById('player-move-icon') as HTMLElement;
+const playerMoveText = document.getElementById('player-move-text') as HTMLElement;
+const computerMoveIcon = document.getElementById('computer-move-icon') as HTMLElement;
+const computerMoveText = document.getElementById('computer-move-text') as HTMLElement;
 
 // Move icons mapping
-const moveIcons = {
+const moveIcons: Record<RPSMove, string> = {
     rock: '🪨',
     paper: '📄',
     scissors: '✂️'
@@ -32,8 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeGame();
 });
 
-// Task 3.2: Create game instance and wire up button click handlers
-function initializeGame() {
+// Create game instance and wire up button click handlers
+function initializeGame(): void {
     try {
         console.log('🎯 Creating RockPaperScissors instance');
         game = new RockPaperScissors();
@@ -42,15 +42,15 @@ function initializeGame() {
         console.log('🎧 Event listeners setup complete');
     } catch (error) {
         console.error('❌ Error initializing game:', error);
-        handleError(error);
+        handleError(error as Error);
     }
 }
 
-function setupEventListeners() {
+function setupEventListeners(): void {
     // Add click handlers for move buttons
     moveButtons.forEach(button => {
         button.addEventListener('click', (event) => {
-            const move = event.currentTarget.dataset.move;
+            const move = (event.currentTarget as HTMLButtonElement).dataset.move as RPSMove;
             if (move) {
                 playGame(move);
             }
@@ -61,36 +61,44 @@ function setupEventListeners() {
     playAgainBtn.addEventListener('click', resetGame);
 }
 
-// Task 3.3: Implement move selection logic that calls playVsComputer()
-function playGame(playerMove) {
+// Implement move selection logic that calls playVsComputer()
+function playGame(playerMove: RPSMove): void {
     try {
         console.log('🎲 Playing game with move:', playerMove);
         // Call the library's playVsComputer method
         currentGameResult = game.playVsComputer(playerMove);
         console.log('🎯 Game result:', currentGameResult);
         
-        // Task 3.4: Display game results with moves and explanation
+        // Display game results with moves and explanation
         displayGameResult(currentGameResult);
         
     } catch (error) {
         console.error('❌ Error playing game:', error);
-        // Task 3.6: Add error handling for any potential edge cases
-        handleError(error);
+        // Add error handling for any potential edge cases
+        handleError(error as Error);
     }
 }
 
-// Task 3.4: Display game results with moves and explanation
-function displayGameResult(gameResult) {
+// Display game results with moves and explanation
+function displayGameResult(gameResult: RPSGameResult): void {
+    console.log('📊 Displaying game result:', gameResult);
+    
     // Hide initial message and show result area
     initialMessage.classList.add('hidden');
     resultArea.classList.remove('hidden');
 
     // Display player move
-    playerMoveIcon.textContent = moveIcons[gameResult.playerMove];
+    const playerIcon = moveIcons[gameResult.playerMove];
+    if (playerIcon) {
+        playerMoveIcon.textContent = playerIcon;
+    }
     playerMoveText.textContent = capitalizeFirstLetter(gameResult.playerMove);
 
     // Display computer move
-    computerMoveIcon.textContent = moveIcons[gameResult.computerMove];
+    const computerIcon = moveIcons[gameResult.computerMove];
+    if (computerIcon) {
+        computerMoveIcon.textContent = computerIcon;
+    }
     computerMoveText.textContent = capitalizeFirstLetter(gameResult.computerMove);
 
     // Display result with appropriate styling
@@ -122,8 +130,10 @@ function displayGameResult(gameResult) {
     }
 }
 
-// Task 3.5: Implement play again functionality to reset game state
-function resetGame() {
+// Implement play again functionality to reset game state
+function resetGame(): void {
+    console.log('🔄 Resetting game');
+    
     // Hide result area and show initial message
     resultArea.classList.add('hidden');
     initialMessage.classList.remove('hidden');
@@ -145,9 +155,9 @@ function resetGame() {
     });
 }
 
-// Task 3.6: Add error handling for any potential edge cases
-function handleError(error) {
-    console.error('Game Error:', error);
+// Add error handling for any potential edge cases
+function handleError(error: Error): void {
+    console.error('🚨 Game Error:', error);
     
     // Display user-friendly error message
     resultArea.classList.remove('hidden');
@@ -165,12 +175,12 @@ function handleError(error) {
 }
 
 // Utility functions
-function capitalizeFirstLetter(string) {
+function capitalizeFirstLetter(string: string): string {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-function getWinExplanation(playerMove, computerMove) {
-    const explanations = {
+function getWinExplanation(playerMove: RPSMove, computerMove: RPSMove): string {
+    const explanations: Record<string, string> = {
         'rock-scissors': 'Rock crushes Scissors',
         'paper-rock': 'Paper covers Rock',
         'scissors-paper': 'Scissors cuts Paper'
@@ -180,8 +190,8 @@ function getWinExplanation(playerMove, computerMove) {
     return explanations[key] || 'You won this round!';
 }
 
-function getLoseExplanation(playerMove, computerMove) {
-    const explanations = {
+function getLoseExplanation(playerMove: RPSMove, computerMove: RPSMove): string {
+    const explanations: Record<string, string> = {
         'scissors-rock': 'Rock crushes Scissors',
         'rock-paper': 'Paper covers Rock',
         'paper-scissors': 'Scissors cuts Paper'
