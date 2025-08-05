@@ -6,15 +6,17 @@ Generated from PRD: `/home/alex/projects/pet/new_test/tasks/rock-paper-scissors-
 
 - `/home/alex/projects/pet/new_test/package.json` - Project metadata and scripts, updated for RPS library
 - `/home/alex/projects/pet/new_test/src/types.ts` - Type definitions, simplified for stateless RPS design
-- `/home/alex/projects/pet/new_test/src/types.test.ts` - Type system tests, updated for simplified RPS types
-- `/home/alex/projects/pet/new_test/src/errors.ts` - Custom error classes for RPS validation
+- `/home/alex/projects/pet/new_test/src/types.test.ts` - Type system tests for simplified RPS types
+- `/home/alex/projects/pet/new_test/src/errors.ts` - Custom error classes (RPSError, InvalidMoveError)
+- `/home/alex/projects/pet/new_test/src/errors.test.ts` - Error class tests
 - `/home/alex/projects/pet/new_test/src/RockPaperScissors.ts` - Main stateless RPS class implementation
-- `/home/alex/projects/pet/new_test/src/index.ts` - Library exports, updated for RPS API
-- `/home/alex/projects/pet/new_test/tests/RockPaperScissors.test.ts` - Comprehensive RPS game logic tests
-- `/home/alex/projects/pet/new_test/tests/index.test.ts` - Integration tests for library exports
-- `/home/alex/projects/pet/new_test/README.md` - Updated documentation with RPS usage examples
-- `/home/alex/projects/pet/new_test/src/TicTacToe.ts` - **TO BE REMOVED** - No longer needed
-- `/home/alex/projects/pet/new_test/tests/TicTacToe.test.ts` - **TO BE REMOVED** - No longer needed
+- `/home/alex/projects/pet/new_test/src/index.ts` - Library exports with RockPaperScissors class and all types
+- `/home/alex/projects/pet/new_test/tests/RockPaperScissors.test.ts` - Comprehensive RPS game logic tests (29 tests)
+- `/home/alex/projects/pet/new_test/tests/index.test.ts` - Integration tests for library exports (6 tests)
+- `/home/alex/projects/pet/new_test/tests/bundle-size.test.ts` - Bundle size and build verification tests
+- `/home/alex/projects/pet/new_test/README.md` - Complete documentation with usage examples and API reference
+- `/home/alex/projects/pet/new_test/dist/` - CommonJS build output
+- `/home/alex/projects/pet/new_test/dist/esm/` - ES modules build output
 
 ### Notes
 
@@ -48,7 +50,7 @@ Generated from PRD: `/home/alex/projects/pet/new_test/tasks/rock-paper-scissors-
   - [x] 3.5 Implement playTwoPlayer method for human vs human games
   - [x] 3.6 Add comprehensive TSDoc documentation to all public methods
 
-- [ ] **T004: Testing and Quality Assurance**
+- [x] **T004: Testing and Quality Assurance**
   - [x] 4.1 Create RockPaperScissors.test.ts following TDD (write failing tests first)
   - [x] 4.2 Test move validation (valid moves, invalid inputs, case insensitivity)
   - [x] 4.3 Test playVsComputer method (all outcomes, verify randomness distribution)
@@ -59,9 +61,9 @@ Generated from PRD: `/home/alex/projects/pet/new_test/tasks/rock-paper-scissors-
   - [x] 4.8 Update index.test.ts to test main library exports
 
 - [ ] **T005: Documentation and Final Integration**
-  - [ ] 5.1 Update index.ts to export RockPaperScissors class and required types
-  - [ ] 5.2 Update README.md with comprehensive usage examples and API documentation
-  - [ ] 5.3 Verify build output (npm run build) produces both CommonJS and ES modules
-  - [ ] 5.4 Test and verify bundle size meets <3KB minified requirement
-  - [ ] 5.5 Run complete CI pipeline (npm run ci) and fix any issues
-  - [ ] 5.6 Final cleanup and verification of all PRD requirements
+  - [x] 5.1 Update index.ts to export RockPaperScissors class and required types
+  - [x] 5.2 Update README.md with comprehensive usage examples and API documentation
+  - [x] 5.3 Verify build output (npm run build) produces both CommonJS and ES modules
+  - [x] 5.4 Test and verify bundle size meets <3KB minified requirement
+  - [x] 5.5 Run complete CI pipeline (npm run ci) and fix any issues
+  - [x] 5.6 Final cleanup and verification of all PRD requirements
