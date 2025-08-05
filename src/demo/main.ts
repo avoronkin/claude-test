@@ -110,6 +110,9 @@ function playGame(playerMove: RPSMove): void {
     try {
         console.log('🎲 Playing game with move:', playerMove);
         
+        // Clear previous selection before starting new game
+        clearButtonSelection();
+        
         gameState.isPlaying = true;
         updateButtonStates();
         
@@ -207,6 +210,7 @@ function resetGame(): void {
     
     // Clear result displays
     clearResultDisplays();
+    clearButtonSelection();
     updateButtonStates();
     
     console.log('✅ Game reset complete');
@@ -227,6 +231,25 @@ function clearResultDisplays(): void {
     });
     
     if (resultText) resultText.className = 'result-text';
+}
+
+/**
+ * Clear button selection/active states
+ */
+function clearButtonSelection(): void {
+    moveButtons.forEach(button => {
+        // Remove any active/selected classes that might be added by browser
+        button.blur(); // Remove focus
+        button.classList.remove('active', 'selected', 'pressed');
+        
+        // Reset any inline styles that might indicate selection
+        button.style.transform = '';
+        button.style.boxShadow = '';
+        button.style.backgroundColor = '';
+        button.style.borderColor = '';
+    });
+    
+    console.log('🧹 Button selection cleared');
 }
 
 /**
