@@ -1,20 +1,14 @@
 /**
- * @fileoverview Tic-Tac-Toe Library
+ * @fileoverview Rock Paper Scissors Library
  * 
- * A TypeScript library providing a complete tic-tac-toe game implementation
- * with immutable state management, comprehensive error handling, and strict typing.
- * 
- * @example
- * ```typescript
- * import { TicTacToe } from 'tic-tac-toe-lib';
- * 
- * const game = new TicTacToe();
- * const game2 = game.makeMove(0, 0); // X plays
- * const game3 = game2.makeMove(1, 1); // O plays
- * console.log(game3.getGameStatus()); // 'in-progress'
- * ```
+ * A TypeScript library providing a stateless Rock Paper Scissors game implementation
+ * with comprehensive error handling, strict typing, and zero dependencies.
  */
 
-export { TicTacToe } from './TicTacToe';
-export * from './types';
-export * from './errors';
+// Export RPS-specific types for public API usage
+export type { RPSMove, RPSResult, RPSPlayerType, RPSMatchFormat, RPSWinner } from './types';
+
+// Export RPS-specific error classes for proper error handling
+export { InvalidMoveError } from './errors';
+
+// Note: RockPaperScissors class export will be added in T003

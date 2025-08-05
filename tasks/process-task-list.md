@@ -3,7 +3,13 @@
 Guidelines for managing task lists in markdown files to track progress on completing a PRD
 
 ## Task Implementation
-- **One sub-task at a time:** Do **NOT** start the next sub‑task until you ask the user for permission and they say "yes" or "y"
+- **One sub-task at a time** 
+- **USE TDD**: Follow Test-Driven Development methodology:
+  1. **Red**: Write a failing test first that defines the desired behavior
+  2. **Green**: Write the minimal code needed to make the test pass
+  3. **Refactor**: Clean up code while keeping tests passing
+  4. **Lint & Compile**: Run linter (`npm run lint:fix`) and type checker (`npm run typecheck`) to ensure code quality
+  5. Repeat cycle for each new feature or bug fix
 - **Completion protocol:**  
   1. When you finish a **sub‑task**, immediately mark it as completed by changing `[ ]` to `[x]`.
   2. If **all** subtasks underneath a parent task are now `[x]`, follow this sequence:
