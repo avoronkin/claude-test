@@ -27,18 +27,18 @@ Generated from PRD: `/home/alex/projects/pet/new_test/tasks/rock-paper-scissors-
 
 ## Tasks
 
-- [ ] **T001: Project Setup and Configuration**
+- [x] **T001: Project Setup and Configuration**
   - [x] 1.1 Update package.json metadata (name, description, keywords) for RPS library
   - [x] 1.2 Remove TicTacToe implementation files (TicTacToe.ts and TicTacToe.test.ts)
   - [x] 1.3 Clean up index.ts exports to prepare for RPS exports
   - [x] 1.4 Verify build configuration supports stateless library pattern
 
 - [ ] **T002: Core Type System and Error Handling**
-  - [ ] 2.1 Simplify RPS types in types.ts (remove stateful RPSGameState, keep essential types)
-  - [ ] 2.2 Create simple RPSGameResult interface for method return values
-  - [ ] 2.3 Create custom error classes (InvalidMoveError) in errors.ts
-  - [ ] 2.4 Update types.test.ts to test simplified RPS types
-  - [ ] 2.5 Remove unused complex RPS types (RPSGameState, RPSRound, etc.)
+  - [x] 2.1 Simplify RPS types in types.ts (remove stateful RPSGameState, keep essential types)
+  - [x] 2.2 Create simple RPSGameResult interface for method return values
+  - [x] 2.3 Create custom error classes (InvalidMoveError) in errors.ts
+  - [x] 2.4 Update types.test.ts to test simplified RPS types
+  - [x] 2.5 Remove unused complex RPS types (RPSGameState, RPSRound, etc.)
 
 - [ ] **T003: RPS Game Engine Implementation**
   - [ ] 3.1 Create RockPaperScissors class skeleton with method signatures and TSDoc

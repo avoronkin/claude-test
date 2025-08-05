@@ -1,5 +1,5 @@
-import type { RPSMove, RPSResult, RPSPlayerType, RPSMatchFormat, RPSWinner } from '../src/index';
-import { InvalidMoveError } from '../src/index';
+import type { RPSMove, RPSResult, RPSWinner, RPSGameResult } from '../src/index';
+import { RPSError, InvalidMoveError } from '../src/index';
 
 describe('RPS Library Index exports', () => {
 
@@ -12,26 +12,25 @@ describe('RPS Library Index exports', () => {
     const result: RPSResult = 'win';
     expect(result).toBe('win');
     
-    // Test RPSPlayerType type
-    const playerType: RPSPlayerType = 'human';
-    expect(playerType).toBe('human');
-    
-    // Test RPSMatchFormat type
-    const matchFormat: RPSMatchFormat = 'single';
-    expect(matchFormat).toBe('single');
-    
     // Test RPSWinner type
     const winner: RPSWinner = 'player1';
     expect(winner).toBe('player1');
   });
 
   it('should export RPS error classes', () => {
+    expect(RPSError).toBeDefined();
     expect(InvalidMoveError).toBeDefined();
     
-    const error = new InvalidMoveError('test invalid move');
-    expect(error).toBeInstanceOf(Error);
-    expect(error.message).toBe('test invalid move');
-    expect(error.name).toBe('InvalidMoveError');
+    const rpsError = new RPSError('test rps error');
+    expect(rpsError).toBeInstanceOf(Error);
+    expect(rpsError.message).toBe('test rps error');
+    expect(rpsError.name).toBe('RPSError');
+    
+    const invalidMoveError = new InvalidMoveError('test invalid move');
+    expect(invalidMoveError).toBeInstanceOf(Error);
+    expect(invalidMoveError).toBeInstanceOf(RPSError);
+    expect(invalidMoveError.message).toBe('test invalid move');
+    expect(invalidMoveError.name).toBe('InvalidMoveError');
   });
 
   it('should validate RPS type constraints', () => {
@@ -43,16 +42,34 @@ describe('RPS Library Index exports', () => {
     const validResults: RPSResult[] = ['win', 'lose', 'draw'];
     expect(validResults).toEqual(['win', 'lose', 'draw']);
     
-    // Test that only valid player types are allowed
-    const validPlayerTypes: RPSPlayerType[] = ['human', 'ai'];
-    expect(validPlayerTypes).toEqual(['human', 'ai']);
-    
-    // Test that only valid match formats are allowed
-    const validMatchFormats: RPSMatchFormat[] = ['single', 'best-of-3', 'best-of-5'];
-    expect(validMatchFormats).toEqual(['single', 'best-of-3', 'best-of-5']);
-    
     // Test that only valid winners are allowed
-    const validWinners: RPSWinner[] = ['player1', 'player2', null];
-    expect(validWinners).toEqual(['player1', 'player2', null]);
+    const validWinners: RPSWinner[] = ['player1', 'player2', 'computer', 'player', null];
+    expect(validWinners).toEqual(['player1', 'player2', 'computer', 'player', null]);
+  });
+
+  it('should export RPSGameResult interface', () => {
+    // Test RPSGameResult for two player game
+    const twoPlayerResult: RPSGameResult = {
+      player1Move: 'rock',
+      player2Move: 'scissors',
+      result: 'win',
+      winner: 'player1',
+      explanation: 'Rock crushes scissors'
+    };
+    
+    expect(twoPlayerResult.result).toBe('win');
+    expect(twoPlayerResult.winner).toBe('player1');
+    
+    // Test RPSGameResult for vs computer game
+    const vsComputerResult: RPSGameResult = {
+      playerMove: 'paper',
+      computerMove: 'rock',
+      result: 'win',
+      winner: 'player',
+      explanation: 'Paper covers rock'
+    };
+    
+    expect(vsComputerResult.result).toBe('win');
+    expect(vsComputerResult.winner).toBe('player');
   });
 });

@@ -6,9 +6,9 @@
  */
 
 // Export RPS-specific types for public API usage
-export type { RPSMove, RPSResult, RPSPlayerType, RPSMatchFormat, RPSWinner } from './types';
+export type { RPSMove, RPSResult, RPSWinner, RPSGameResult } from './types';
 
 // Export RPS-specific error classes for proper error handling
-export { InvalidMoveError } from './errors';
+export { RPSError, InvalidMoveError } from './errors';
 
 // Note: RockPaperScissors class export will be added in T003

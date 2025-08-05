@@ -1,24 +1,24 @@
 /**
- * Base error class for all tic-tac-toe related errors.
+ * Base error class for all Rock Paper Scissors related errors.
  * Extends the native Error class with a specific name for easier error handling.
  */
-export class TicTacToeError extends Error {
+export class RPSError extends Error {
   /**
-   * Creates a new TicTacToeError.
+   * Creates a new RPSError.
    * 
    * @param message - The error message describing what went wrong
    */
   constructor(message: string) {
     super(message);
-    this.name = 'TicTacToeError';
+    this.name = 'RPSError';
   }
 }
 
 /**
- * Error thrown when attempting to make an invalid move.
- * This includes moves to occupied cells or out-of-bounds coordinates.
+ * Error thrown when attempting to make an invalid move in Rock Paper Scissors.
+ * This includes invalid move strings, unsupported moves, or invalid input types.
  */
-export class InvalidMoveError extends TicTacToeError {
+export class InvalidMoveError extends RPSError {
   /**
    * Creates a new InvalidMoveError.
    * 
@@ -27,21 +27,5 @@ export class InvalidMoveError extends TicTacToeError {
   constructor(message: string) {
     super(message);
     this.name = 'InvalidMoveError';
-  }
-}
-
-/**
- * Error thrown when attempting to make a move after the game has already ended.
- * This occurs when trying to play after a win or draw condition has been reached.
- */
-export class GameEndedError extends TicTacToeError {
-  /**
-   * Creates a new GameEndedError.
-   * 
-   * @param message - The error message describing why the move cannot be made
-   */
-  constructor(message: string) {
-    super(message);
-    this.name = 'GameEndedError';
   }
 }

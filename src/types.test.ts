@@ -1,10 +1,7 @@
 import { 
   RPSMove, 
-  RPSResult, 
-  RPSGameState, 
-  RPSGameStatus,
-  RPSPlayerType,
-  RPSMatchFormat
+  RPSResult,
+  RPSGameResult
 } from './types';
 
 describe('Rock Paper Scissors Types', () => {
@@ -22,71 +19,48 @@ describe('Rock Paper Scissors Types', () => {
     });
   });
 
-  describe('RPSGameStatus', () => {
-    test('should accept valid game statuses', () => {
-      const validStatuses: RPSGameStatus[] = ['waiting', 'in-progress', 'completed'];
-      expect(validStatuses).toHaveLength(3);
-    });
-  });
-
-  describe('RPSPlayerType', () => {
-    test('should accept valid player types', () => {
-      const validTypes: RPSPlayerType[] = ['human', 'ai'];
-      expect(validTypes).toHaveLength(2);
-    });
-  });
-
-  describe('RPSMatchFormat', () => {
-    test('should accept valid match formats', () => {
-      const validFormats: RPSMatchFormat[] = ['single', 'best-of-3', 'best-of-5'];
-      expect(validFormats).toHaveLength(3);
-    });
-  });
-
-  describe('RPSGameState', () => {
-    test('should have correct structure for waiting state', () => {
-      const gameState: RPSGameState = {
-        status: 'waiting',
-        currentRound: 0,
-        maxRounds: 1,
-        matchFormat: 'single',
-        player1Score: 0,
-        player2Score: 0,
-        rounds: [],
-        winner: null,
-        isDraw: false
-      };
-
-      expect(gameState.status).toBe('waiting');
-      expect(gameState.currentRound).toBe(0);
-      expect(gameState.rounds).toEqual([]);
-      expect(gameState.winner).toBeNull();
-    });
-
-    test('should have correct structure for completed state', () => {
-      const gameState: RPSGameState = {
-        status: 'completed',
-        currentRound: 1,
-        maxRounds: 1,
-        matchFormat: 'single',
-        player1Score: 1,
-        player2Score: 0,
-        rounds: [
-          {
-            roundNumber: 1,
-            player1Move: 'rock',
-            player2Move: 'scissors',
-            result: 'win',
-            winner: 'player1'
-          }
-        ],
+  describe('RPSGameResult', () => {
+    test('should have correct structure for win result', () => {
+      const gameResult: RPSGameResult = {
+        player1Move: 'rock',
+        player2Move: 'scissors',
+        result: 'win',
         winner: 'player1',
-        isDraw: false
+        explanation: 'Rock crushes scissors'
       };
 
-      expect(gameState.status).toBe('completed');
-      expect(gameState.winner).toBe('player1');
-      expect(gameState.rounds).toHaveLength(1);
+      expect(gameResult.result).toBe('win');
+      expect(gameResult.winner).toBe('player1');
+      expect(gameResult.explanation).toContain('Rock crushes scissors');
+    });
+
+    test('should have correct structure for draw result', () => {
+      const gameResult: RPSGameResult = {
+        player1Move: 'rock',
+        player2Move: 'rock',
+        result: 'draw',
+        winner: null,
+        explanation: 'Both players chose rock'
+      };
+
+      expect(gameResult.result).toBe('draw');
+      expect(gameResult.winner).toBeNull();
+      expect(gameResult.explanation).toContain('Both players chose');
+    });
+
+    test('should have correct structure for computer vs player result', () => {
+      const gameResult: RPSGameResult = {
+        playerMove: 'paper',
+        computerMove: 'rock',
+        result: 'win',
+        winner: 'player',
+        explanation: 'Paper covers rock'
+      };
+
+      expect(gameResult.playerMove).toBe('paper');
+      expect(gameResult.computerMove).toBe('rock');
+      expect(gameResult.result).toBe('win');
+      expect(gameResult.winner).toBe('player');
     });
   });
 });
