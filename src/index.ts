@@ -5,6 +5,6 @@
  * with comprehensive error handling, strict typing, and zero dependencies.
  */
 
-// Export all RPS types, errors, and main class from consolidated file
-export type { RPSMove, RPSResult, RPSWinner, RPSGameResult } from './RockPaperScissors';
-export { RPSError, InvalidMoveError, RockPaperScissors } from './RockPaperScissors';
+// Export all RPS types, errors, and main class from games directory
+export type { RPSMove, RPSResult, RPSWinner, RPSGameResult } from './games/rock-paper-scissors/RockPaperScissors';
+export { RPSError, InvalidMoveError, RockPaperScissors } from './games/rock-paper-scissors/RockPaperScissors';

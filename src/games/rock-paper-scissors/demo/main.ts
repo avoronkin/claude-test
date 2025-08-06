@@ -1,4 +1,4 @@
-import { RockPaperScissors, type RPSGameResult, type RPSMove } from '../index';
+import { RockPaperScissors, type RPSGameResult, type RPSMove } from '../RockPaperScissors';
 import './style.css';
 
 console.log('🎮 TypeScript Demo loaded');

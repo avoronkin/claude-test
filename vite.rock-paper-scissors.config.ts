@@ -5,7 +5,7 @@ export default defineConfig({
   root: './src/games/rock-paper-scissors/demo',
   publicDir: false,
   build: {
-    outDir: '../../../../dist/demo',
+    outDir: '../../../../dist/demo/rock-paper-scissors',
     emptyOutDir: true,
     rollupOptions: {
       input: {

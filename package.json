@@ -32,16 +32,20 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage --coverageReporters=text --coverageReporters=cobertura",
-    "lint": "eslint 'src/**/*.ts' --ignore-pattern 'src/demo/**'",
-    "lint:fix": "eslint 'src/**/*.ts' --ignore-pattern 'src/demo/**' --fix",
+    "lint": "eslint 'src/**/*.ts' --ignore-pattern 'src/**/demo/**'",
+    "lint:fix": "eslint 'src/**/*.ts' --ignore-pattern 'src/**/demo/**' --fix",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist coverage",
     "ci": "npm run lint && npm run typecheck && npm run test:coverage && npm run build",
     "prepublishOnly": "npm run ci",
     "demo:dev": "vite",
+    "demo:dev:rps": "vite --config vite.rock-paper-scissors.config.ts",
     "demo:build": "npm run build && vite build",
+    "demo:build:rps": "npm run build && vite build --config vite.rock-paper-scissors.config.ts",
+    "demo:build:all": "npm run demo:build:rps",
     "demo:preview": "vite preview",
-    "demo:deploy": "npm run demo:build && cp -r dist/demo/* docs/"
+    "demo:deploy": "npm run demo:build:all && npm run demo:copy-to-docs",
+    "demo:copy-to-docs": "mkdir -p docs/rock-paper-scissors && cp -r dist/demo/rock-paper-scissors/* docs/rock-paper-scissors/ 2>/dev/null || cp -r dist/demo/* docs/ 2>/dev/null || true"
   },
   "keywords": [
     "rock-paper-scissors",
