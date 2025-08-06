@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tic Tac Toe browser game using TypeScript library">
+    <meta name="author" content="Tic Tac Toe Game Demo">
+    <title>Tic Tac Toe Game</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Tic Tac Toe</h1>
+            <p>Play the classic game of Tic Tac Toe!</p>
+        </header>
+
+        <main class="game-area">
+            <!-- Game Status Section -->
+            <section class="game-status" aria-label="Game status">
+                <div id="current-player" class="status-display">
+                    <h2>Current Player: <span id="player-indicator">X</span></h2>
+                </div>
+                <div id="game-message" class="message-display">
+                    <p>Click any cell to make your move</p>
+                </div>
+            </section>
+
+            <!-- Game Board Section -->
+            <section class="game-board" aria-label="Tic Tac Toe board">
+                <div id="board" class="board-grid">
+                    <button class="cell" data-row="0" data-col="0" aria-label="Cell 1"></button>
+                    <button class="cell" data-row="0" data-col="1" aria-label="Cell 2"></button>
+                    <button class="cell" data-row="0" data-col="2" aria-label="Cell 3"></button>
+                    <button class="cell" data-row="1" data-col="0" aria-label="Cell 4"></button>
+                    <button class="cell" data-row="1" data-col="1" aria-label="Cell 5"></button>
+                    <button class="cell" data-row="1" data-col="2" aria-label="Cell 6"></button>
+                    <button class="cell" data-row="2" data-col="0" aria-label="Cell 7"></button>
+                    <button class="cell" data-row="2" data-col="1" aria-label="Cell 8"></button>
+                    <button class="cell" data-row="2" data-col="2" aria-label="Cell 9"></button>
+                </div>
+            </section>
+
+            <!-- Game Controls Section -->
+            <section class="game-controls" aria-label="Game controls">
+                <button id="new-game-btn" class="control-btn">
+                    <span class="btn-icon">🔄</span>
+                    <span class="btn-text">New Game</span>
+                </button>
+            </section>
+
+            <!-- Game Result Display Area -->
+            <section class="game-result hidden" aria-label="Game result">
+                <div id="result-area" class="result-content">
+                    <h3 id="result-title">Game Over!</h3>
+                    <p id="result-message">Player X wins!</p>
+                    <div id="winning-combination" class="win-highlight hidden"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>
+                <a href="../../../docs/index.html">← Back to Games</a> | 
+                Powered by TypeScript
+            </p>
+        </footer>
+    </div>
+
+    <script type="module" src="./main.ts"></script>
+</body>
+</html>
