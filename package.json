@@ -40,7 +40,8 @@
     "prepublishOnly": "npm run ci",
     "demo:dev": "vite",
     "demo:build": "npm run build && vite build",
-    "demo:preview": "vite preview"
+    "demo:preview": "vite preview",
+    "demo:deploy": "npm run demo:build && cp -r dist/demo/* docs/"
   },
   "keywords": [
     "rock-paper-scissors",
