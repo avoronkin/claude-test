@@ -1,5 +1,119 @@
-import { RockPaperScissors } from '../src/RockPaperScissors';
-import { InvalidMoveError } from '../src/errors';
+import { 
+  RockPaperScissors,
+  RPSError,
+  InvalidMoveError,
+  type RPSMove,
+  type RPSResult,
+  type RPSGameResult
+} from './RockPaperScissors';
+
+describe('Rock Paper Scissors Types', () => {
+  describe('RPSMove', () => {
+    test('should accept valid moves', () => {
+      const validMoves: RPSMove[] = ['rock', 'paper', 'scissors'];
+      expect(validMoves).toHaveLength(3);
+    });
+  });
+
+  describe('RPSResult', () => {
+    test('should accept valid results', () => {
+      const validResults: RPSResult[] = ['win', 'lose', 'draw'];
+      expect(validResults).toHaveLength(3);
+    });
+  });
+
+  describe('RPSGameResult', () => {
+    test('should have correct structure for win result', () => {
+      const gameResult: RPSGameResult = {
+        player1Move: 'rock',
+        player2Move: 'scissors',
+        result: 'win',
+        winner: 'player1',
+        explanation: 'Rock crushes scissors'
+      };
+
+      expect(gameResult.result).toBe('win');
+      expect(gameResult.winner).toBe('player1');
+      expect(gameResult.explanation).toContain('Rock crushes scissors');
+    });
+
+    test('should have correct structure for draw result', () => {
+      const gameResult: RPSGameResult = {
+        player1Move: 'rock',
+        player2Move: 'rock',
+        result: 'draw',
+        winner: null,
+        explanation: 'Both players chose rock'
+      };
+
+      expect(gameResult.result).toBe('draw');
+      expect(gameResult.winner).toBeNull();
+      expect(gameResult.explanation).toContain('Both players chose');
+    });
+
+    test('should have correct structure for computer vs player result', () => {
+      const gameResult: RPSGameResult = {
+        playerMove: 'paper',
+        computerMove: 'rock',
+        result: 'win',
+        winner: 'player',
+        explanation: 'Paper covers rock'
+      };
+
+      expect(gameResult.playerMove).toBe('paper');
+      expect(gameResult.computerMove).toBe('rock');
+      expect(gameResult.result).toBe('win');
+      expect(gameResult.winner).toBe('player');
+    });
+  });
+});
+
+describe('Rock Paper Scissors Error Classes', () => {
+  describe('RPSError', () => {
+    test('should create RPSError with correct message and name', () => {
+      const message = 'A generic RPS error occurred';
+      const error = new RPSError(message);
+      
+      expect(error).toBeInstanceOf(Error);
+      expect(error).toBeInstanceOf(RPSError);
+      expect(error.message).toBe(message);
+      expect(error.name).toBe('RPSError');
+    });
+  });
+
+  describe('InvalidMoveError', () => {
+    test('should create InvalidMoveError with correct message and name', () => {
+      const message = 'Invalid move: "lizard" is not a valid move';
+      const error = new InvalidMoveError(message);
+      
+      expect(error).toBeInstanceOf(Error);
+      expect(error).toBeInstanceOf(RPSError);
+      expect(error).toBeInstanceOf(InvalidMoveError);
+      expect(error.message).toBe(message);
+      expect(error.name).toBe('InvalidMoveError');
+    });
+
+    test('should be thrown when invalid move is provided', () => {
+      expect(() => {
+        throw new InvalidMoveError('Invalid move: "spock" is not supported');
+      }).toThrow(InvalidMoveError);
+      
+      expect(() => {
+        throw new InvalidMoveError('Invalid move: "spock" is not supported');
+      }).toThrow(RPSError);
+    });
+
+    test('should have proper error message for invalid input types', () => {
+      const error = new InvalidMoveError('Invalid move: input must be a string');
+      expect(error.message).toContain('input must be a string');
+    });
+
+    test('should have proper error message for empty input', () => {
+      const error = new InvalidMoveError('Invalid move: empty string provided');
+      expect(error.message).toContain('empty string');
+    });
+  });
+});
 
 describe('RockPaperScissors', () => {
   let rps: RockPaperScissors;
@@ -98,7 +212,6 @@ describe('RockPaperScissors', () => {
 
   describe('Game Logic', () => {
     describe('determineWinner helper', () => {
-      // Rock beats Scissors
       test('rock should beat scissors', () => {
         const result = rps.playTwoPlayer('rock', 'scissors');
         expect(result.result).toBe('win');
@@ -106,7 +219,6 @@ describe('RockPaperScissors', () => {
         expect(result.explanation).toContain('Rock crushes scissors');
       });
 
-      // Scissors beats Paper
       test('scissors should beat paper', () => {
         const result = rps.playTwoPlayer('scissors', 'paper');
         expect(result.result).toBe('win');
@@ -114,7 +226,6 @@ describe('RockPaperScissors', () => {
         expect(result.explanation).toContain('Scissors cuts paper');
       });
 
-      // Paper beats Rock
       test('paper should beat rock', () => {
         const result = rps.playTwoPlayer('paper', 'rock');
         expect(result.result).toBe('win');
@@ -122,7 +233,6 @@ describe('RockPaperScissors', () => {
         expect(result.explanation).toContain('Paper covers rock');
       });
 
-      // Reverse scenarios (player2 wins)
       test('player2 rock should beat player1 scissors', () => {
         const result = rps.playTwoPlayer('scissors', 'rock');
         expect(result.result).toBe('lose');
@@ -144,7 +254,6 @@ describe('RockPaperScissors', () => {
         expect(result.explanation).toContain('Paper covers rock');
       });
 
-      // Draw scenarios
       test('same moves should result in draw', () => {
         const rockResult = rps.playTwoPlayer('rock', 'rock');
         expect(rockResult.result).toBe('draw');
@@ -166,7 +275,6 @@ describe('RockPaperScissors', () => {
     describe('playVsComputer method', () => {
       test('should generate random computer moves', () => {
         const results: string[] = [];
-        // Run 100 games to test randomness
         for (let i = 0; i < 100; i++) {
           const result = rps.playVsComputer('rock');
           if (result.computerMove) {
@@ -174,18 +282,15 @@ describe('RockPaperScissors', () => {
           }
         }
 
-        // Check that all three moves appear at least once
         const uniqueMoves = [...new Set(results)];
         expect(uniqueMoves.length).toBeGreaterThan(1);
         expect(uniqueMoves.every(move => ['rock', 'paper', 'scissors'].includes(move))).toBe(true);
       });
 
       test('should work with player winning scenarios', () => {
-        // Mock Math.random to return specific values for predictable testing
         const originalRandom = Math.random;
         
-        // Test rock vs scissors (player wins)
-        Math.random = jest.fn(() => 0.9); // Should generate scissors
+        Math.random = jest.fn(() => 0.9);
         const result1 = rps.playVsComputer('rock');
         expect(result1.playerMove).toBe('rock');
         expect(result1.computerMove).toBe('scissors');
@@ -193,15 +298,13 @@ describe('RockPaperScissors', () => {
         expect(result1.winner).toBe('player');
         expect(result1.explanation).toContain('Rock crushes scissors');
 
-        // Restore original Math.random
         Math.random = originalRandom;
       });
 
       test('should work with computer winning scenarios', () => {
         const originalRandom = Math.random;
         
-        // Test rock vs paper (computer wins)
-        Math.random = jest.fn(() => 0.4); // Should generate paper
+        Math.random = jest.fn(() => 0.4);
         const result = rps.playVsComputer('rock');
         expect(result.playerMove).toBe('rock');
         expect(result.computerMove).toBe('paper');
@@ -215,8 +318,7 @@ describe('RockPaperScissors', () => {
       test('should work with draw scenarios', () => {
         const originalRandom = Math.random;
         
-        // Test rock vs rock (draw)
-        Math.random = jest.fn(() => 0.1); // Should generate rock
+        Math.random = jest.fn(() => 0.1);
         const result = rps.playVsComputer('rock');
         expect(result.playerMove).toBe('rock');
         expect(result.computerMove).toBe('rock');
@@ -244,7 +346,7 @@ describe('RockPaperScissors', () => {
       }
       
       const end = process.hrtime.bigint();
-      const totalTimeMs = Number(end - start) / 1000000; // Convert nanoseconds to milliseconds
+      const totalTimeMs = Number(end - start) / 1000000;
       const avgTimeMs = totalTimeMs / iterations;
       
       expect(avgTimeMs).toBeLessThan(1);

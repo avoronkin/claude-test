@@ -5,7 +5,6 @@ console.log('🎮 TypeScript Demo loaded');
 
 // Game instance and state
 let game: RockPaperScissors;
-let currentGameResult: RPSGameResult | null = null;
 
 // DOM element references with proper typing
 const moveButtons = document.querySelectorAll<HTMLButtonElement>('.move-btn');
@@ -123,7 +122,6 @@ function playGame(playerMove: RPSMove): void {
         setTimeout(() => {
             // Call the library's playVsComputer method
             const result = game.playVsComputer(playerMove);
-            currentGameResult = result;
             gameState.currentResult = result;
             
             console.log('🎉 Game result:', result);
@@ -154,14 +152,14 @@ function displayGameResult(gameResult: RPSGameResult): void {
     if (resultArea) resultArea.classList.remove('hidden');
 
     // Display player move
-    if (playerMoveIcon && playerMoveText) {
+    if (playerMoveIcon && playerMoveText && gameResult.playerMove) {
         const playerIcon = moveIcons[gameResult.playerMove];
         playerMoveIcon.textContent = playerIcon;
         playerMoveText.textContent = capitalizeFirstLetter(gameResult.playerMove);
     }
 
     // Display computer move
-    if (computerMoveIcon && computerMoveText) {
+    if (computerMoveIcon && computerMoveText && gameResult.computerMove) {
         const computerIcon = moveIcons[gameResult.computerMove];
         computerMoveIcon.textContent = computerIcon;
         computerMoveText.textContent = capitalizeFirstLetter(gameResult.computerMove);
@@ -175,12 +173,16 @@ function displayGameResult(gameResult: RPSGameResult): void {
             case 'win':
                 resultText.textContent = 'You Win! 🎉';
                 resultText.classList.add('win');
-                resultExplanation.textContent = getWinExplanation(gameResult.playerMove, gameResult.computerMove);
+                resultExplanation.textContent = gameResult.playerMove && gameResult.computerMove 
+                    ? getWinExplanation(gameResult.playerMove, gameResult.computerMove)
+                    : 'You won this round!';
                 break;
             case 'lose':
                 resultText.textContent = 'You Lose 😔';
                 resultText.classList.add('lose');
-                resultExplanation.textContent = getLoseExplanation(gameResult.playerMove, gameResult.computerMove);
+                resultExplanation.textContent = gameResult.playerMove && gameResult.computerMove
+                    ? getLoseExplanation(gameResult.playerMove, gameResult.computerMove)
+                    : 'Computer won this round!';
                 break;
             case 'draw':
                 resultText.textContent = 'It\'s a Draw 🤝';
@@ -241,7 +243,6 @@ function resetGame(): void {
     if (initialMessage) initialMessage.classList.remove('hidden');
     
     // Clear current game result
-    currentGameResult = null;
     gameState.currentResult = null;
     gameState.isPlaying = false;
     
@@ -309,7 +310,6 @@ function clearPreviousGameResult(): void {
     clearResultDisplays();
     
     // Clear game state
-    currentGameResult = null;
     gameState.currentResult = null;
 }
 

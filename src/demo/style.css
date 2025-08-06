@@ -63,10 +63,21 @@ header p {
 
 /* Game Area Styles */
 .game-area {
-    min-height: 400px;
+    height: 600px;
     display: flex;
     flex-direction: column;
     gap: 2rem;
+}
+
+/* Game Result Styles */
+.game-result {
+    text-align: center;
+    height: 420px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: visible;
 }
 
 /* Move Selection Styles */
@@ -125,14 +136,6 @@ header p {
     font-weight: 600;
 }
 
-/* Game Result Styles */
-.game-result {
-    text-align: center;
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
 .result-content {
     animation: fadeIn 0.5s ease-in;
@@ -337,6 +340,14 @@ footer {
         padding: 1.5rem;
         margin: 0.5rem;
         border-radius: var(--border-radius);
+    }
+    
+    .game-area {
+        height: 520px;
+    }
+    
+    .game-result {
+        height: 350px;
     }
     
     .move-buttons {

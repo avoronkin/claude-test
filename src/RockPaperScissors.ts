@@ -1,5 +1,82 @@
-import type { RPSMove, RPSGameResult, RPSResult, RPSWinner } from './types';
-import { InvalidMoveError } from './errors';
+// ============================================================================
+// Types
+// ============================================================================
+
+/** Represents a move in Rock Paper Scissors game */
+export type RPSMove = 'rock' | 'paper' | 'scissors';
+
+/** Represents the result of a single game from player's perspective */
+export type RPSResult = 'win' | 'lose' | 'draw';
+
+/** Represents the winner of a game - can be player1, player2, computer, player, or null for draw */
+export type RPSWinner = 'player1' | 'player2' | 'computer' | 'player' | null;
+
+/**
+ * Interface representing the result of a single Rock Paper Scissors game.
+ * Used by both playTwoPlayer and playVsComputer methods.
+ */
+export interface RPSGameResult {
+  /** Player 1's move (for two player games) or player's move (for vs computer) */
+  readonly player1Move?: RPSMove;
+  
+  /** Player 2's move (for two player games) */
+  readonly player2Move?: RPSMove;
+  
+  /** Player's move (for vs computer games) */
+  readonly playerMove?: RPSMove;
+  
+  /** Computer's move (for vs computer games) */
+  readonly computerMove?: RPSMove;
+  
+  /** The result from the first player's perspective */
+  readonly result: RPSResult;
+  
+  /** The winner of this game */
+  readonly winner: RPSWinner;
+  
+  /** Human-readable explanation of the result */
+  readonly explanation: string;
+}
+
+// ============================================================================
+// Errors
+// ============================================================================
+
+/**
+ * Base error class for all Rock Paper Scissors related errors.
+ * Extends the native Error class with a specific name for easier error handling.
+ */
+export class RPSError extends Error {
+  /**
+   * Creates a new RPSError.
+   * 
+   * @param message - The error message describing what went wrong
+   */
+  constructor(message: string) {
+    super(message);
+    this.name = 'RPSError';
+  }
+}
+
+/**
+ * Error thrown when attempting to make an invalid move in Rock Paper Scissors.
+ * This includes invalid move strings, unsupported moves, or invalid input types.
+ */
+export class InvalidMoveError extends RPSError {
+  /**
+   * Creates a new InvalidMoveError.
+   * 
+   * @param message - The error message describing the invalid move
+   */
+  constructor(message: string) {
+    super(message);
+    this.name = 'InvalidMoveError';
+  }
+}
+
+// ============================================================================
+// Main Class
+// ============================================================================
 
 /**
  * A stateless Rock Paper Scissors game implementation.

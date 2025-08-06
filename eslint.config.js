@@ -51,6 +51,6 @@ module.exports = [
     }
   },
   {
-    ignores: ['dist/', 'node_modules/', '*.js', 'src/**/*.test.ts', 'src/**/*.spec.ts']
+    ignores: ['dist/', 'node_modules/', '*.js', 'src/**/*.test.ts', 'src/**/*.spec.ts', 'src/demo/']
   }
 ];

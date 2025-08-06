@@ -10,9 +10,9 @@
   "jsdelivr": "dist/esm/index.js",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/esm/index.js",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.js"
     }
   },
   "files": [
@@ -26,22 +26,21 @@
     "doc": "docs"
   },
   "scripts": {
-    "build": "npm run clean && npm run build:cjs && npm run build:esm",
-    "build:cjs": "tsc",
-    "build:esm": "tsc -p tsconfig.esm.json",
+    "build": "npm run clean && npm run build:lib && npm run build:types",
+    "build:lib": "vite build --config vite.lib.config.ts",
+    "build:types": "tsc --declaration --emitDeclarationOnly --outDir dist",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage --coverageReporters=text --coverageReporters=cobertura",
-    "lint": "eslint src/**/*.ts",
-    "lint:fix": "eslint src/**/*.ts --fix",
+    "lint": "eslint 'src/**/*.ts' --ignore-pattern 'src/demo/**'",
+    "lint:fix": "eslint 'src/**/*.ts' --ignore-pattern 'src/demo/**' --fix",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist coverage",
     "ci": "npm run lint && npm run typecheck && npm run test:coverage && npm run build",
     "prepublishOnly": "npm run ci",
     "demo:dev": "vite",
     "demo:build": "npm run build && vite build",
-    "demo:preview": "vite preview",
-    "demo": "npm run demo:dev"
+    "demo:preview": "vite preview"
   },
   "keywords": [
     "rock-paper-scissors",
