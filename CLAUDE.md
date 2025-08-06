@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a TypeScript library development project for implementing tic-tac-toe game logic. The library provides a reusable, class-based API with immutable state management, zero dependencies, and comprehensive error handling. Target output is a lightweight library (<5KB minified) supporting both CommonJS and ES modules.
+This is a TypeScript games library development project providing multiple game implementations. Currently includes Rock Paper Scissors, with plans for Tic Tac Toe and other games. Each game provides a reusable, class-based API with immutable state management, zero dependencies, and comprehensive error handling. Target output is a lightweight library (<5KB minified) supporting both CommonJS and ES modules.
 
 ## Development Environment
 
@@ -15,7 +15,7 @@ This is a TypeScript library development project for implementing tic-tac-toe ga
 
 ## Key Requirements
 
-- **API Pattern**: Class-based architecture with `new TicTacToe()` instantiation
+- **API Pattern**: Class-based architecture with `new GameClass()` instantiation for each game
 - **State Management**: Immutable state - each move returns new game instance
 - **Error Handling**: Fail-fast with custom error classes for different scenarios
 - **Type Safety**: 100% TypeScript coverage, no `any` types in public API
@@ -35,16 +35,61 @@ Follow the workflow defined in `docs/process-task-list.md`:
    - Commit with conventional format and task reference
    - Mark parent task as `[x]`
 
+## Project Structure
+
+```
+src/
+  games/
+    rock-paper-scissors/
+      RockPaperScissors.ts        # Game logic
+      RockPaperScissors.test.ts   # Tests
+      demo/                       # Browser demo
+        index.html
+        main.ts
+        style.css
+        tsconfig.json
+    [future games like tic-tac-toe, etc.]
+  index.ts                        # Main library exports
+dist/                            # Build output
+docs/                            # GitHub Pages
+  index.html                     # Main navigation page
+  rock-paper-scissors/           # Compiled demo
+    index.html
+    assets/
+```
+
 ## Code Standards
 
 - **Documentation**: JSDoc comments required for all public methods/properties
 - **Error Messages**: Descriptive, actionable error messages
 - **Method Naming**: TypeScript camelCase conventions
-- **File Organization**: `src/` for source, `dist/` for build output, `tests/` for tests
+- **File Organization**: Games organized in `src/games/[game-name]/` structure
 
 ## Project Status
 
-Currently in planning phase with PRD (`tasks/prd-tic-tac-toe-library.md`) and task breakdown (`tasks/tic-tac-toe-tasks.md`) completed. Ready to begin T001: Project Setup and Configuration. No git repository initialized yet.
+Active development with Rock Paper Scissors game completed and deployed. Repository is initialized with GitHub Pages configured. Ready for adding additional games following the established pattern.
+
+## Development Scripts
+
+- **Library build**: `npm run build` - Builds complete library
+- **Demo development**: 
+  - `npm run demo:dev:rps` - Rock Paper Scissors development server
+  - `npm run demo:dev` - Default demo server
+- **Demo build & deploy**:
+  - `npm run demo:build:rps` - Build Rock Paper Scissors demo
+  - `npm run demo:build:all` - Build all game demos  
+  - `npm run demo:deploy` - Build and deploy to docs/ for GitHub Pages
+- **Quality checks**: `npm run lint:fix`, `npm run typecheck`, `npm test`
+
+## Adding New Games
+
+1. Create `src/games/[game-name]/` directory
+2. Implement game logic in `[GameName].ts` with tests
+3. Create demo in `demo/` subdirectory
+4. Add Vite config: `vite.[game-name].config.ts`
+5. Update npm scripts in package.json
+6. Add to main exports in `src/index.ts`
+7. Update docs navigation page
 
 ## Development Practices
 
