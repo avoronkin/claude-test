@@ -19,6 +19,7 @@ const statHumanWins = document.getElementById('stat-human-wins') as HTMLElement;
 const statAIWins = document.getElementById('stat-ai-wins') as HTMLElement;
 const statDraws = document.getElementById('stat-draws') as HTMLElement;
 const statWinRate = document.getElementById('stat-win-rate') as HTMLElement;
+const thinkingIndicator = document.getElementById('thinking-indicator') as HTMLElement;
 
 // Statistics Manager Class
 class StatisticsManager {
@@ -123,6 +124,12 @@ function initGame(): void {
     enableBoard();
     hideResult();
     
+    // Clear AI visual effects
+    hideAIThinking();
+    cells.forEach(cell => {
+        cell.classList.remove('ai-move', 'ai-last-move');
+    });
+    
     // If AI goes first, make AI move after short delay
     if (currentGame.isAITurn) {
         setTimeout(() => {
@@ -173,6 +180,54 @@ function recordGameCompletion(): void {
 }
 
 /**
+ * Show AI thinking visual indicators
+ */
+function showAIThinking(): void {
+    boardElement.classList.add('board-thinking');
+    thinkingIndicator.classList.remove('hidden');
+    
+    // Add accessibility announcement
+    boardElement.setAttribute('aria-busy', 'true');
+    boardElement.setAttribute('aria-live', 'polite');
+    boardElement.setAttribute('aria-label', 'AI is thinking about its next move');
+}
+
+/**
+ * Hide AI thinking visual indicators
+ */
+function hideAIThinking(): void {
+    boardElement.classList.remove('board-thinking');
+    thinkingIndicator.classList.add('hidden');
+    
+    // Remove accessibility attributes
+    boardElement.removeAttribute('aria-busy');
+    boardElement.setAttribute('aria-label', 'Tic Tac Toe board');
+}
+
+/**
+ * Highlight AI's move with animation
+ */
+function highlightAIMove(row: number, col: number): void {
+    // Clear previous AI move highlights
+    cells.forEach(cell => {
+        cell.classList.remove('ai-move', 'ai-last-move');
+    });
+    
+    // Find and highlight the AI's move
+    const cellIndex = row * 3 + col;
+    const targetCell = cells[cellIndex];
+    
+    // Add animation class
+    targetCell.classList.add('ai-move');
+    
+    // After animation completes, switch to persistent highlight
+    setTimeout(() => {
+        targetCell.classList.remove('ai-move');
+        targetCell.classList.add('ai-last-move');
+    }, 1200);
+}
+
+/**
  * Make AI move with visual feedback
  */
 async function makeAIMove(): Promise<void> {
@@ -180,7 +235,8 @@ async function makeAIMove(): Promise<void> {
         return;
     }
     
-    // Show thinking message
+    // Show AI thinking indicators
+    showAIThinking();
     updateDisplay();
     
     // Add delay for UX (between 100-500ms as specified)
@@ -188,11 +244,38 @@ async function makeAIMove(): Promise<void> {
     await new Promise(resolve => setTimeout(resolve, delay));
     
     try {
+        // Get AI move before executing
+        const aiMove = currentGame.getBestMove();
+        
         // Make AI move
         currentGame = currentGame.makeAIMove();
         
+        // Hide thinking indicators
+        hideAIThinking();
+        
         // Update display with new game state
         updateDisplay();
+        
+        // Highlight AI's move with animation
+        highlightAIMove(aiMove.row, aiMove.col);
+        
+        // Announce AI move for accessibility
+        const cellNumber = aiMove.row * 3 + aiMove.col + 1;
+        const aiSide = currentGame.humanPlayerSide === 'X' ? 'O' : 'X';
+        const announcement = `AI played ${aiSide} in cell ${cellNumber}`;
+        
+        // Create temporary announcement for screen readers
+        const announcer = document.createElement('div');
+        announcer.setAttribute('aria-live', 'assertive');
+        announcer.setAttribute('aria-atomic', 'true');
+        announcer.className = 'sr-only';
+        announcer.textContent = announcement;
+        document.body.appendChild(announcer);
+        
+        // Remove after announcement
+        setTimeout(() => {
+            document.body.removeChild(announcer);
+        }, 1000);
         
         // If game is still ongoing and it's still AI turn (shouldn't happen), make another move
         if (currentGame.isAITurn && currentGame.gameStatus === 'ongoing') {
@@ -200,6 +283,7 @@ async function makeAIMove(): Promise<void> {
         }
     } catch (error) {
         console.error('Error making AI move:', error);
+        hideAIThinking();
     }
 }
 
