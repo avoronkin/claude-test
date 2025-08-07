@@ -76,10 +76,10 @@ Complete TypeScript games library with three fully implemented games: Rock Paper
 
 - **Library build**: `npm run build` - Builds complete library
 - **Demo development**: 
+  - `npm run demo:dev` - Main navigation page with all games
   - `npm run demo:dev:rps` - Rock Paper Scissors development server
   - `npm run demo:dev:ttt` - Tic Tac Toe development server
   - `npm run demo:dev:2048` - 2048 development server
-  - `npm run demo:dev` - Default demo server
 - **Demo build & deploy**:
   - `npm run demo:build:rps` - Build Rock Paper Scissors demo
   - `npm run demo:build:ttt` - Build Tic Tac Toe demo

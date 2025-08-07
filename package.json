@@ -38,7 +38,7 @@
     "clean": "rm -rf dist coverage",
     "ci": "npm run lint && npm run typecheck && npm run test:coverage && npm run build",
     "prepublishOnly": "npm run ci",
-    "demo:dev": "vite",
+    "demo:dev": "vite --config vite.main.config.ts",
     "demo:dev:rps": "vite --config vite.rock-paper-scissors.config.ts",
     "demo:dev:ttt": "vite --config vite.tic-tac-toe.config.ts",
     "demo:dev:2048": "vite --config vite.2048.config.ts",
