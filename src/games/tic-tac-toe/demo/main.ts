@@ -1,5 +1,5 @@
 // Import the TicTacToe game class
-import { TicTacToe, Player, GameStatus } from '../TicTacToe';
+import { TicTacToe, Player, GameStatus, GameMode } from '../TicTacToe';
 
 // DOM element references
 const boardElement = document.getElementById('board') as HTMLElement;
@@ -10,18 +10,73 @@ const newGameBtn = document.getElementById('new-game-btn') as HTMLButtonElement;
 const resultArea = document.querySelector('.game-result') as HTMLElement;
 const resultTitle = document.getElementById('result-title') as HTMLElement;
 const resultMessage = document.getElementById('result-message') as HTMLElement;
+const sideSelectionInputs = document.querySelectorAll<HTMLInputElement>('input[name="player-side"]');
 
 // Game state
 let currentGame: TicTacToe;
 
 /**
- * Initialize a new game
+ * Initialize a new game with AI opponent
  */
 function initGame(): void {
-    currentGame = new TicTacToe();
+    // Get selected player side
+    const selectedSide = getSelectedPlayerSide();
+    
+    // Determine who goes first randomly
+    const firstPlayer = Math.random() < 0.5 ? 'X' : 'O';
+    
+    // Create new AI game
+    currentGame = new TicTacToe(undefined, firstPlayer, undefined, undefined, GameMode.HUMAN_VS_AI, selectedSide);
+    
     updateDisplay();
     enableBoard();
     hideResult();
+    
+    // If AI goes first, make AI move after short delay
+    if (currentGame.isAITurn) {
+        setTimeout(() => {
+            makeAIMove();
+        }, 500);
+    }
+}
+
+/**
+ * Get the selected player side from radio buttons
+ */
+function getSelectedPlayerSide(): Player {
+    const checkedInput = document.querySelector<HTMLInputElement>('input[name="player-side"]:checked');
+    return (checkedInput?.value as Player) || 'X';
+}
+
+/**
+ * Make AI move with visual feedback
+ */
+async function makeAIMove(): Promise<void> {
+    if (!currentGame.isAITurn || currentGame.gameStatus !== 'ongoing') {
+        return;
+    }
+    
+    // Show thinking message
+    updateDisplay();
+    
+    // Add delay for UX (between 100-500ms as specified)
+    const delay = 200 + Math.random() * 300; // Random delay between 200-500ms
+    await new Promise(resolve => setTimeout(resolve, delay));
+    
+    try {
+        // Make AI move
+        currentGame = currentGame.makeAIMove();
+        
+        // Update display with new game state
+        updateDisplay();
+        
+        // If game is still ongoing and it's still AI turn (shouldn't happen), make another move
+        if (currentGame.isAITurn && currentGame.gameStatus === 'ongoing') {
+            setTimeout(() => makeAIMove(), 300);
+        }
+    } catch (error) {
+        console.error('Error making AI move:', error);
+    }
 }
 
 /**
@@ -65,18 +120,28 @@ function updateDisplay(): void {
 function updateGameMessage(): void {
     const status = currentGame.gameStatus;
     const player = currentGame.currentPlayer;
+    const isAITurn = currentGame.isAITurn;
+    const humanSide = currentGame.humanPlayerSide;
     
     switch (status) {
         case 'ongoing':
-            gameMessage.textContent = `Player ${player}'s turn - Click any empty cell to make your move`;
+            if (isAITurn) {
+                gameMessage.textContent = 'Ход компьютера...';
+            } else {
+                gameMessage.textContent = `Your turn (${player}) - Click any empty cell to make your move`;
+            }
             break;
         case 'won':
             const winner = currentGame.winner;
-            gameMessage.textContent = `Game Over! Player ${winner} wins!`;
+            if (winner === humanSide) {
+                gameMessage.textContent = `Congratulations! You won! 🎉`;
+            } else {
+                gameMessage.textContent = `Computer wins! Better luck next time.`;
+            }
             showResult(status, winner);
             break;
         case 'draw':
-            gameMessage.textContent = 'Game Over! It\'s a draw!';
+            gameMessage.textContent = 'It\'s a draw! Good game!';
             showResult(status, null);
             break;
     }
@@ -160,6 +225,11 @@ function handleCellClick(event: Event): void {
     const col = parseInt(target.dataset.col || '0');
     
     try {
+        // Only allow moves when it's human player's turn
+        if (currentGame.isAITurn) {
+            return; // Ignore clicks during AI turn
+        }
+        
         // Make the move
         currentGame = currentGame.makeMove(row, col);
         
@@ -171,6 +241,13 @@ function handleCellClick(event: Event): void {
         setTimeout(() => {
             target.style.transform = '';
         }, 100);
+        
+        // If game is still ongoing and it's AI's turn, make AI move
+        if (currentGame.gameStatus === 'ongoing' && currentGame.isAITurn) {
+            setTimeout(() => {
+                makeAIMove();
+            }, 300);
+        }
         
     } catch (error) {
         // Handle invalid moves
@@ -233,6 +310,11 @@ document.addEventListener('DOMContentLoaded', () => {
             event.preventDefault();
             initGame();
         }
+    });
+    
+    // Add event listeners for side selection
+    sideSelectionInputs.forEach(input => {
+        input.addEventListener('change', initGame);
     });
     
     // Focus management for accessibility

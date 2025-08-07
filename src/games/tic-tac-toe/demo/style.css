@@ -250,6 +250,76 @@ header p {
     font-weight: bold;
 }
 
+/* Side Selection Styles */
+.side-selection {
+    text-align: center;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.side-selection h3 {
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.side-options {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.side-option {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: var(--border-radius);
+    background: white;
+    cursor: pointer;
+    transition: var(--transition);
+    min-width: 140px;
+    gap: 0.5rem;
+}
+
+.side-option:hover {
+    border-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.side-option input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    accent-color: var(--accent-color);
+}
+
+.side-option input[type="radio"]:checked + .side-symbol {
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+.side-option:has(input[type="radio"]:checked) {
+    border-color: var(--accent-color);
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.side-symbol {
+    font-size: 1.5rem;
+    font-weight: bold;
+    transition: var(--transition);
+}
+
+.side-label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
 /* Footer Styles */
 footer {
     text-align: center;
