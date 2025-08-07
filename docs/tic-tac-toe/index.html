@@ -6,8 +6,8 @@
     <meta name="description" content="Tic Tac Toe browser game using TypeScript library">
     <meta name="author" content="Tic Tac Toe Game Demo">
     <title>Tic Tac Toe Game</title>
-  <script type="module" crossorigin src="assets/main-DbHy88dW.js"></script>
-  <link rel="stylesheet" crossorigin href="assets/main-CFqBzHVp.css">
+  <script type="module" crossorigin src="./assets/main-7NhjaUFG.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/main-7MjMAH_h.css">
 </head>
 <body>
     <div class="container">
@@ -27,6 +27,23 @@
                 </div>
             </section>
 
+            <!-- Side Selection Section -->
+            <section class="side-selection" aria-label="Player side selection">
+                <h3>Choose Your Side:</h3>
+                <div class="side-options">
+                    <label class="side-option">
+                        <input type="radio" name="player-side" value="X" checked>
+                        <span class="side-symbol">X</span>
+                        <span class="side-label">Play as X (crosses)</span>
+                    </label>
+                    <label class="side-option">
+                        <input type="radio" name="player-side" value="O">
+                        <span class="side-symbol">O</span>
+                        <span class="side-label">Play as O (circles)</span>
+                    </label>
+                </div>
+            </section>
+
             <!-- Game Board Section -->
             <section class="game-board" aria-label="Tic Tac Toe board">
                 <div id="board" class="board-grid">
@@ -39,6 +56,7 @@
                     <button class="cell" data-row="2" data-col="0" aria-label="Cell 7"></button>
                     <button class="cell" data-row="2" data-col="1" aria-label="Cell 8"></button>
                     <button class="cell" data-row="2" data-col="2" aria-label="Cell 9"></button>
+                    <div id="thinking-indicator" class="thinking-indicator hidden">🤔 AI думает...</div>
                 </div>
             </section>
 
@@ -57,6 +75,37 @@
                     <p id="result-message">Player X wins!</p>
                     <div id="winning-combination" class="win-highlight hidden"></div>
                 </div>
+            </section>
+
+            <!-- Statistics Section -->
+            <section class="statistics" aria-label="Game statistics">
+                <h3>Statistics vs AI</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">Games Played:</span>
+                        <span id="stat-games-played" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Your Wins:</span>
+                        <span id="stat-human-wins" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">AI Wins:</span>
+                        <span id="stat-ai-wins" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Draws:</span>
+                        <span id="stat-draws" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item full-width">
+                        <span class="stat-label">Win Rate:</span>
+                        <span id="stat-win-rate" class="stat-value">0.0%</span>
+                    </div>
+                </div>
+                <button id="reset-stats-btn" class="control-btn reset-btn">
+                    <span class="btn-icon">🔄</span>
+                    <span class="btn-text">Reset Statistics</span>
+                </button>
             </section>
         </main>
 

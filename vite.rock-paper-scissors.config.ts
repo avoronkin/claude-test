@@ -4,6 +4,7 @@ import { resolve } from 'path';
 export default defineConfig({
   root: './src/games/rock-paper-scissors/demo',
   publicDir: false,
+  base: './',
   build: {
     outDir: '../../../../dist/demo/rock-paper-scissors',
     emptyOutDir: true,

@@ -4,6 +4,7 @@ import { resolve } from 'path';
 export default defineConfig({
   root: './src/games/tic-tac-toe/demo',
   publicDir: false,
+  base: './',
   build: {
     outDir: '../../../../dist/demo/tic-tac-toe',
     emptyOutDir: true,
