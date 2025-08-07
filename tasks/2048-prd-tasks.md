@@ -73,10 +73,10 @@
   - [x] 4.6 Verify demo builds successfully with new Vite config
   - [x] 4.7 Run full test suite and type checking to ensure no regressions
 
-- [ ] 5.0 Deploy and Documentation Updates
-  - [ ] 5.1 Update main docs navigation page (`docs/index.html`) with 2048 link
-  - [ ] 5.2 Update demo deployment scripts to include 2048
-  - [ ] 5.3 Test complete build and deployment process
-  - [ ] 5.4 Verify all demos (RPS, Tic-Tac-Toe, 2048) work on GitHub Pages
-  - [ ] 5.5 Run final quality checks (lint, typecheck, test coverage)
-  - [ ] 5.6 Update project documentation if needed (README, CLAUDE.md)
+- [x] 5.0 Deploy and Documentation Updates
+  - [x] 5.1 Update main docs navigation page (`docs/index.html`) with 2048 link
+  - [x] 5.2 Update demo deployment scripts to include 2048
+  - [x] 5.3 Test complete build and deployment process
+  - [x] 5.4 Verify all demos (RPS, Tic-Tac-Toe, 2048) work on GitHub Pages
+  - [x] 5.5 Run final quality checks (lint, typecheck, test coverage)
+  - [x] 5.6 Update project documentation if needed (README, CLAUDE.md)

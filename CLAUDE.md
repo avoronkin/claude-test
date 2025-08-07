@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a TypeScript games library development project providing multiple game implementations. Currently includes Rock Paper Scissors, with plans for Tic Tac Toe and other games. Each game provides a reusable, class-based API with immutable state management, zero dependencies, and comprehensive error handling. Target output is a lightweight library (<5KB minified) supporting both CommonJS and ES modules.
+This is a TypeScript games library development project providing multiple game implementations. Currently includes Rock Paper Scissors, Tic Tac Toe, and 2048 games. Each game provides a reusable, class-based API with immutable state management, zero dependencies, and comprehensive error handling. Target output is a lightweight library (<5KB minified) supporting both CommonJS and ES modules.
 
 ## Development Environment
 
@@ -44,18 +44,21 @@ src/
       RockPaperScissors.ts        # Game logic
       RockPaperScissors.test.ts   # Tests
       demo/                       # Browser demo
-        index.html
-        main.ts
-        style.css
-        tsconfig.json
-    [future games like tic-tac-toe, etc.]
-  index.ts                        # Main library exports
-dist/                            # Build output
-docs/                            # GitHub Pages
-  index.html                     # Main navigation page
-  rock-paper-scissors/           # Compiled demo
-    index.html
-    assets/
+    tic-tac-toe/
+      TicTacToe.ts               # Game logic  
+      TicTacToe.test.ts          # Tests
+      demo/                      # Browser demo
+    2048/
+      Game2048.ts                # Game logic
+      Game2048.test.ts           # Tests
+      demo/                      # Browser demo
+  index.ts                       # Main library exports
+dist/                           # Build output
+docs/                           # GitHub Pages
+  index.html                    # Main navigation page
+  rock-paper-scissors/          # Compiled demos
+  tic-tac-toe/
+  2048/
 ```
 
 ## Code Standards
@@ -67,16 +70,20 @@ docs/                            # GitHub Pages
 
 ## Project Status
 
-Active development with Rock Paper Scissors game completed and deployed. Repository is initialized with GitHub Pages configured. Ready for adding additional games following the established pattern.
+Complete TypeScript games library with three fully implemented games: Rock Paper Scissors, Tic Tac Toe, and 2048. All games feature comprehensive test coverage, browser demos, and are deployed to GitHub Pages. Library provides immutable state management, custom error handling, and zero external dependencies.
 
 ## Development Scripts
 
 - **Library build**: `npm run build` - Builds complete library
 - **Demo development**: 
   - `npm run demo:dev:rps` - Rock Paper Scissors development server
+  - `npm run demo:dev:ttt` - Tic Tac Toe development server
+  - `npm run demo:dev:2048` - 2048 development server
   - `npm run demo:dev` - Default demo server
 - **Demo build & deploy**:
   - `npm run demo:build:rps` - Build Rock Paper Scissors demo
+  - `npm run demo:build:ttt` - Build Tic Tac Toe demo
+  - `npm run demo:build:2048` - Build 2048 demo
   - `npm run demo:build:all` - Build all game demos  
   - `npm run demo:deploy` - Build and deploy to docs/ for GitHub Pages
 - **Quality checks**: `npm run lint:fix`, `npm run typecheck`, `npm test`
