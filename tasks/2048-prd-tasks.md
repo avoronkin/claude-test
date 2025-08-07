@@ -64,14 +64,14 @@
   - [x] 3.9 Create demo-specific TypeScript configuration (`tsconfig.json`)
   - [x] 3.10 Test demo functionality and user interactions
 
-- [ ] 4.0 Integrate with Build System and Library Exports
-  - [ ] 4.1 Create Vite configuration for 2048 demo (`vite.2048.config.ts`)
-  - [ ] 4.2 Update main library exports in `src/index.ts` to include Game2048
-  - [ ] 4.3 Add 2048 demo npm scripts to `package.json` (dev, build commands)
-  - [ ] 4.4 Update library build process to include 2048 game
-  - [ ] 4.5 Test library build and exports work correctly
-  - [ ] 4.6 Verify demo builds successfully with new Vite config
-  - [ ] 4.7 Run full test suite and type checking to ensure no regressions
+- [x] 4.0 Integrate with Build System and Library Exports
+  - [x] 4.1 Create Vite configuration for 2048 demo (`vite.2048.config.ts`)
+  - [x] 4.2 Update main library exports in `src/index.ts` to include Game2048
+  - [x] 4.3 Add 2048 demo npm scripts to `package.json` (dev, build commands)
+  - [x] 4.4 Update library build process to include 2048 game
+  - [x] 4.5 Test library build and exports work correctly
+  - [x] 4.6 Verify demo builds successfully with new Vite config
+  - [x] 4.7 Run full test suite and type checking to ensure no regressions
 
 - [ ] 5.0 Deploy and Documentation Updates
   - [ ] 5.1 Update main docs navigation page (`docs/index.html`) with 2048 link
