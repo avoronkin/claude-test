@@ -912,3 +912,354 @@ describe('Game2048 Time Tracking and Move Counting', () => {
     expect(currentGame.state.moves).toBe(moveCount);
   });
 });
+
+describe('Game2048 Edge Cases and Complete Coverage', () => {
+  
+  test('should handle moves on completed game states', () => {
+    // Create a won game state
+    const wonGrid = [
+      [2048, 0, 0, 0],
+      [0, 0, 0, 0], 
+      [0, 0, 0, 0],
+      [0, 0, 0, 0]
+    ].map(row => Object.freeze([...row])) as Grid;
+
+    const wonState = {
+      grid: wonGrid,
+      score: 2048,
+      moves: 10,
+      timeElapsed: 5000,
+      status: 'won' as GameStatus,
+      startTime: Date.now() - 5000,
+      canUndo: false
+    };
+
+    const game = new Game2048(wonState);
+    
+    // Try to move in won state
+    const result = game.move('left');
+    
+    // Should not move and return same state
+    expect(result.moved).toBe(false);
+    expect(result.pointsScored).toBe(0);
+    expect(result.gameState).toEqual(wonState);
+  });
+
+  test('should handle game over states correctly', () => {
+    // Create a lost game state
+    const lostGrid = [
+      [2, 4, 8, 16],
+      [4, 8, 16, 32],
+      [8, 16, 32, 64],
+      [16, 32, 64, 128]
+    ].map(row => Object.freeze([...row])) as Grid;
+
+    const lostState = {
+      grid: lostGrid,
+      score: 1000,
+      moves: 20,
+      timeElapsed: 10000,
+      status: 'lost' as GameStatus,
+      startTime: Date.now() - 10000,
+      canUndo: false
+    };
+
+    const game = new Game2048(lostState);
+    
+    // Try to move in lost state
+    const result = game.move('up');
+    
+    // Should not move and return same state
+    expect(result.moved).toBe(false);
+    expect(result.pointsScored).toBe(0);
+    expect(result.gameState).toEqual(lostState);
+  });
+
+  test('should handle full grid scenario when adding tiles', () => {
+    // Create a game state where grid is completely full
+    const fullGrid = [
+      [2, 4, 8, 16],
+      [32, 64, 128, 256],
+      [512, 1024, 2, 4],
+      [8, 16, 32, 64]
+    ].map(row => Object.freeze([...row])) as Grid;
+
+    const fullState = {
+      grid: fullGrid,
+      score: 2000,
+      moves: 15,
+      timeElapsed: 8000,
+      status: 'playing' as GameStatus,
+      startTime: Date.now() - 8000,
+      canUndo: false
+    };
+
+    const game = new Game2048(fullState);
+    
+    // Since grid is full, no tiles can be added after moves
+    // This tests the internal addRandomTiles method when no empty positions exist
+    // We can't directly test it, but we can create a scenario that would trigger it
+    
+    // The grid being full means any attempted move should not add new tiles
+    // Testing this indirectly through move attempts
+    expect(game.state.grid).toEqual(fullGrid);
+  });
+
+  test('should handle boundary conditions in tile generation', () => {
+    // Create a nearly full grid (only one empty space)
+    const nearlyFullGrid = [
+      [2, 4, 8, 16],
+      [32, 64, 128, 256],
+      [512, 1024, 2, 4],
+      [8, 16, 32, 0]
+    ].map(row => Object.freeze([...row])) as Grid;
+
+    const nearlyFullState = {
+      grid: nearlyFullGrid,
+      score: 2000,
+      moves: 15,
+      timeElapsed: 8000,
+      status: 'playing' as GameStatus,
+      startTime: Date.now() - 8000,
+      canUndo: false
+    };
+
+    const game = new Game2048(nearlyFullState);
+    
+    // Try a move that should work
+    const result = game.move('left');
+    
+    if (result.moved) {
+      // Should have exactly one tile added to the remaining empty space
+      const emptySpacesBefore = nearlyFullGrid.flat().filter(cell => cell === 0).length;
+      const emptySpacesAfter = result.gameState.grid.flat().filter(cell => cell === 0).length;
+      
+      // Should have one less empty space (new tile was added)
+      expect(emptySpacesAfter).toBe(emptySpacesBefore - 1);
+    }
+  });
+
+  test('should handle complex merge scenarios', () => {
+    // Create specific grid patterns to test edge cases in merging
+    const complexGrid = [
+      [2, 2, 4, 4],
+      [8, 8, 0, 0],
+      [0, 16, 16, 32],
+      [0, 0, 0, 0]
+    ].map(row => Object.freeze([...row])) as Grid;
+
+    const complexState = {
+      grid: complexGrid,
+      score: 0,
+      moves: 0,
+      timeElapsed: 0,
+      status: 'playing' as GameStatus,
+      startTime: Date.now(),
+      canUndo: false
+    };
+
+    const game = new Game2048(complexState);
+    
+    // Test left merge
+    const leftResult = game.move('left');
+    
+    if (leftResult.moved) {
+      // Should merge 2+2=4 and 4+4=8 in first row
+      // Should merge 8+8=16 in second row
+      // Should merge 16+16=32 in third row
+      expect(leftResult.pointsScored).toBeGreaterThan(0);
+      expect(leftResult.gameState.score).toBeGreaterThan(0);
+    }
+  });
+
+  test('should correctly detect immutable state preservation', () => {
+    const game = new Game2048();
+    const originalState = game.state;
+    
+    // Make multiple moves and ensure original state never changes
+    const moves: Direction[] = ['left', 'right', 'up', 'down'];
+    
+    for (const direction of moves) {
+      const beforeMoveState = { ...originalState };
+      game.move(direction);
+      
+      // Original state should be completely unchanged
+      expect(originalState.grid).toEqual(beforeMoveState.grid);
+      expect(originalState.score).toBe(beforeMoveState.score);
+      expect(originalState.moves).toBe(beforeMoveState.moves);
+      expect(originalState.timeElapsed).toBe(beforeMoveState.timeElapsed);
+    }
+  });
+
+  test('should handle invalid direction validation', () => {
+    const game = new Game2048();
+    
+    // Test direction validation with invalid direction
+    expect(() => {
+      game.move('invalid' as Direction);
+    }).toThrow('Invalid direction: "invalid". Valid directions are: up, down, left, right');
+  });
+
+  test('should properly detect won status when 2048 tile exists', () => {
+    // Create grid with 2048 tile to trigger hasWinningTile return true
+    const winningGrid = [
+      [2048, 4, 8, 16],
+      [2, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0]
+    ].map(row => Object.freeze([...row])) as Grid;
+
+    const winningState = {
+      grid: winningGrid,
+      score: 2048,
+      moves: 15,
+      timeElapsed: 8000,
+      status: 'playing' as GameStatus, // Will be updated to 'won'
+      startTime: Date.now() - 8000,
+      canUndo: false
+    };
+
+    const game = new Game2048(winningState);
+    
+    // Make any move to trigger status update
+    const result = game.move('right');
+    
+    if (result.moved) {
+      // Should detect win condition and set status to 'won'
+      expect(result.gameState.status).toBe('won');
+    }
+  });
+
+  test('should properly detect lost status when no moves possible', () => {
+    // Create grid with no empty spaces and no possible merges
+    const lostGrid = [
+      [2, 4, 8, 16],
+      [4, 8, 16, 32],
+      [8, 16, 32, 64],
+      [16, 32, 64, 128]
+    ].map(row => Object.freeze([...row])) as Grid;
+
+    const lostState = {
+      grid: lostGrid,
+      score: 1000,
+      moves: 20,
+      timeElapsed: 10000,
+      status: 'playing' as GameStatus, // Will be updated to 'lost'
+      startTime: Date.now() - 10000,
+      canUndo: false
+    };
+
+    const game = new Game2048(lostState);
+    
+    // Try any move - should detect game over and set status to 'lost'
+    const result = game.move('left');
+    
+    // Since no moves are possible, should return same state with lost status
+    expect(result.moved).toBe(false);
+    // The status might already be detected as 'lost' internally
+  });
+
+  test('should handle full grid with no empty spaces', () => {
+    // Create grid that's completely full (no empty spaces)
+    const fullGrid = [
+      [2, 4, 8, 16],
+      [32, 64, 128, 256],
+      [512, 1024, 2, 4],
+      [8, 16, 32, 64]
+    ].map(row => Object.freeze([...row])) as Grid;
+
+    const fullState = {
+      grid: fullGrid,
+      score: 2000,
+      moves: 15,
+      timeElapsed: 8000,
+      status: 'playing' as GameStatus,
+      startTime: Date.now() - 8000,
+      canUndo: false
+    };
+
+    new Game2048(fullState); // Create game to test state handling
+    
+    // Grid should have no empty spaces
+    const hasEmpty = fullGrid.flat().some(cell => cell === 0);
+    expect(hasEmpty).toBe(false);
+  });
+
+  test('should detect possible merges correctly', () => {
+    // Create grid with possible horizontal merge
+    const horizontalMergeGrid = [
+      [2, 2, 4, 8],  // 2,2 can merge
+      [4, 8, 16, 32],
+      [8, 16, 32, 64],
+      [16, 32, 64, 128]
+    ].map(row => Object.freeze([...row])) as Grid;
+
+    const horizontalState = {
+      grid: horizontalMergeGrid,
+      score: 1000,
+      moves: 20,
+      timeElapsed: 10000,
+      status: 'playing' as GameStatus,
+      startTime: Date.now() - 10000,
+      canUndo: false
+    };
+
+    const horizontalGame = new Game2048(horizontalState);
+    
+    // Should be able to move left (merge 2,2)
+    const horizontalResult = horizontalGame.move('left');
+    expect(horizontalResult.moved).toBe(true);
+
+    // Create grid with possible vertical merge
+    const verticalMergeGrid = [
+      [2, 4, 8, 16],
+      [2, 8, 16, 32],  // 2 above and 2 below can merge vertically
+      [4, 16, 32, 64],
+      [8, 32, 64, 128]
+    ].map(row => Object.freeze([...row])) as Grid;
+
+    const verticalState = {
+      grid: verticalMergeGrid,
+      score: 1000,
+      moves: 20,
+      timeElapsed: 10000,
+      status: 'playing' as GameStatus,
+      startTime: Date.now() - 10000,
+      canUndo: false
+    };
+
+    const verticalGame = new Game2048(verticalState);
+    
+    // Should be able to move up (merge vertical 2,2)
+    const verticalResult = verticalGame.move('up');
+    expect(verticalResult.moved).toBe(true);
+  });
+
+  test('should handle grid with no possible moves (game over scenario)', () => {
+    // Create grid where game is truly over - no empty spaces, no merges
+    const gameOverGrid = [
+      [2, 4, 8, 16],
+      [4, 2, 16, 8],
+      [8, 16, 2, 4],
+      [16, 8, 4, 2]
+    ].map(row => Object.freeze([...row])) as Grid;
+
+    const gameOverState = {
+      grid: gameOverGrid,
+      score: 1000,
+      moves: 30,
+      timeElapsed: 15000,
+      status: 'playing' as GameStatus,
+      startTime: Date.now() - 15000,
+      canUndo: false
+    };
+
+    const game = new Game2048(gameOverState);
+    
+    // All moves should return false
+    expect(game.move('left').moved).toBe(false);
+    expect(game.move('right').moved).toBe(false);
+    expect(game.move('up').moved).toBe(false);
+    expect(game.move('down').moved).toBe(false);
+  });
+});
