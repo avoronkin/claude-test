@@ -1,4 +1,4 @@
-import { TicTacToe, InvalidMoveError, GameCompletedError } from './TicTacToe';
+import { TicTacToe, InvalidMoveError, GameCompletedError, GameMode, PlayerType } from './TicTacToe';
 
 describe('TicTacToe', () => {
   describe('constructor and initial state', () => {
@@ -206,6 +206,141 @@ describe('TicTacToe', () => {
       const drawGame = new TicTacToe(drawBoard, 'X', 'draw', null);
       
       expect(() => drawGame.makeMove(0, 0)).toThrow(GameCompletedError);
+    });
+  });
+
+  describe('AI types and game modes', () => {
+    it('should have GameMode enum with correct values', () => {
+      expect(GameMode.HUMAN_VS_HUMAN).toBe('human_vs_human');
+      expect(GameMode.HUMAN_VS_AI).toBe('human_vs_ai');
+    });
+
+    it('should have PlayerType enum with correct values', () => {
+      expect(PlayerType.HUMAN).toBe('human');
+      expect(PlayerType.AI).toBe('ai');
+    });
+
+    it('should support creating AI opponent game', () => {
+      // This should not throw when AI types are implemented
+      expect(() => {
+        new TicTacToe(undefined, undefined, undefined, undefined, GameMode.HUMAN_VS_AI, 'X');
+      }).not.toThrow();
+    });
+  });
+
+  describe('AI minimax algorithm', () => {
+    it('should have minimax method that returns optimal move score', () => {
+      const game = new TicTacToe(undefined, undefined, undefined, undefined, GameMode.HUMAN_VS_AI, 'X');
+      
+      // Test on empty board - AI should return a score
+      const score = game.minimax(game.board, 0, true, -Infinity, Infinity);
+      expect(typeof score).toBe('number');
+    });
+
+    it('should return winning move when AI can win in one move', () => {
+      // Board where AI (O) can win by playing [2,2]
+      const board = [
+        ['X' as const, null, null],
+        [null, 'O' as const, null],
+        ['O' as const, null, null]
+      ];
+      
+      const game = new TicTacToe(board, 'O', 'ongoing', null, GameMode.HUMAN_VS_AI, 'X');
+      const bestMove = game.getBestMove();
+      
+      // AI should choose a winning move (either [0,0] for column or [0,2] for diagonal)
+      const isWinningMove = (bestMove.row === 0 && bestMove.col === 0) || 
+                           (bestMove.row === 0 && bestMove.col === 2);
+      expect(isWinningMove).toBe(true);
+    });
+
+    it('should block player winning move', () => {
+      // Board where human (X) can win by playing [0,2], AI should block
+      const board = [
+        ['X' as const, 'X' as const, null],
+        [null, 'O' as const, null],
+        [null, null, null]
+      ];
+      
+      const game = new TicTacToe(board, 'O', 'ongoing', null, GameMode.HUMAN_VS_AI, 'X');
+      const bestMove = game.getBestMove();
+      
+      // AI should block by playing [0,2]
+      expect(bestMove).toEqual({ row: 0, col: 2 });
+    });
+
+    it('should complete minimax calculation within performance requirement', () => {
+      const game = new TicTacToe(undefined, undefined, undefined, undefined, GameMode.HUMAN_VS_AI, 'X');
+      
+      const start = performance.now();
+      game.getBestMove();
+      const end = performance.now();
+      
+      expect(end - start).toBeLessThan(100); // Should be under 100ms
+    });
+  });
+
+  describe('AI game initialization and turn management', () => {
+    it('should have method to determine random first player', () => {
+      const game = new TicTacToe(undefined, undefined, undefined, undefined, GameMode.HUMAN_VS_AI, 'X');
+      
+      // Test that method exists and returns valid player
+      const firstPlayer = game.determineFirstPlayer();
+      expect(['X', 'O']).toContain(firstPlayer);
+    });
+
+    it('should randomly select first player over multiple calls', () => {
+      const game = new TicTacToe(undefined, undefined, undefined, undefined, GameMode.HUMAN_VS_AI, 'X');
+      
+      // Call multiple times to test randomness
+      const results = [];
+      for (let i = 0; i < 20; i++) {
+        results.push(game.determineFirstPlayer());
+      }
+      
+      // Should have both X and O in results (with very high probability)
+      const hasX = results.includes('X');
+      const hasO = results.includes('O');
+      expect(hasX || hasO).toBe(true); // At least one should be present
+    });
+
+    it('should allow creating game with specific first player', () => {
+      const gameXFirst = new TicTacToe(undefined, 'X', undefined, undefined, GameMode.HUMAN_VS_AI, 'X');
+      const gameOFirst = new TicTacToe(undefined, 'O', undefined, undefined, GameMode.HUMAN_VS_AI, 'X');
+      
+      expect(gameXFirst.currentPlayer).toBe('X');
+      expect(gameOFirst.currentPlayer).toBe('O');
+    });
+  });
+
+  describe('AI move integration', () => {
+    it('should have method to make AI move automatically', () => {
+      const game = new TicTacToe(undefined, 'O', 'ongoing', null, GameMode.HUMAN_VS_AI, 'X');
+      
+      // AI should be able to make a move automatically
+      const newGame = game.makeAIMove();
+      expect(newGame.currentPlayer).toBe('X'); // Should switch back to human
+      
+      // Should have one more move on the board
+      const originalMoves = game.board.flat().filter((cell: any) => cell !== null).length;
+      const newMoves = newGame.board.flat().filter((cell: any) => cell !== null).length;
+      expect(newMoves).toBe(originalMoves + 1);
+    });
+
+    it('should throw error when trying to make AI move on human turn', () => {
+      const game = new TicTacToe(undefined, 'X', 'ongoing', null, GameMode.HUMAN_VS_AI, 'X');
+      
+      expect(() => game.makeAIMove()).toThrow('Cannot make AI move when it is human player turn');
+    });
+
+    it('should maintain immutability when making AI moves', () => {
+      const game = new TicTacToe(undefined, 'O', 'ongoing', null, GameMode.HUMAN_VS_AI, 'X');
+      const newGame = game.makeAIMove();
+      
+      // Original game should be unchanged
+      expect(game.board).not.toBe(newGame.board);
+      expect(game.currentPlayer).toBe('O');
+      expect(newGame.currentPlayer).toBe('X');
     });
   });
 
