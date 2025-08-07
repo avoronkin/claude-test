@@ -1,5 +1,5 @@
 // Import the TicTacToe game class
-import { TicTacToe, Player, GameStatus, GameMode } from '../TicTacToe';
+import { TicTacToe, Player, GameStatus, GameMode, GameStatistics } from '../TicTacToe';
 
 // DOM element references
 const boardElement = document.getElementById('board') as HTMLElement;
@@ -11,9 +11,100 @@ const resultArea = document.querySelector('.game-result') as HTMLElement;
 const resultTitle = document.getElementById('result-title') as HTMLElement;
 const resultMessage = document.getElementById('result-message') as HTMLElement;
 const sideSelectionInputs = document.querySelectorAll<HTMLInputElement>('input[name="player-side"]');
+const resetStatsBtn = document.getElementById('reset-stats-btn') as HTMLButtonElement;
+
+// Statistics display elements
+const statGamesPlayed = document.getElementById('stat-games-played') as HTMLElement;
+const statHumanWins = document.getElementById('stat-human-wins') as HTMLElement;
+const statAIWins = document.getElementById('stat-ai-wins') as HTMLElement;
+const statDraws = document.getElementById('stat-draws') as HTMLElement;
+const statWinRate = document.getElementById('stat-win-rate') as HTMLElement;
+
+// Statistics Manager Class
+class StatisticsManager {
+    private readonly storageKey = 'tic-tac-toe-ai-stats';
+    
+    /**
+     * Get current statistics from local storage
+     */
+    getStats(): GameStatistics {
+        try {
+            const stored = localStorage.getItem(this.storageKey);
+            if (stored) {
+                const stats = JSON.parse(stored);
+                // Recalculate win rate to ensure accuracy
+                stats.winRate = stats.gamesPlayed > 0 ? (stats.humanWins / stats.gamesPlayed) * 100 : 0;
+                return stats;
+            }
+        } catch (error) {
+            console.warn('Failed to load statistics:', error);
+        }
+        
+        // Return default statistics
+        return {
+            gamesPlayed: 0,
+            humanWins: 0,
+            aiWins: 0,
+            draws: 0,
+            winRate: 0
+        };
+    }
+    
+    /**
+     * Record a game result and update statistics
+     */
+    recordGameResult(result: 'human_win' | 'ai_win' | 'draw'): void {
+        const stats = this.getStats();
+        
+        stats.gamesPlayed++;
+        
+        switch (result) {
+            case 'human_win':
+                stats.humanWins++;
+                break;
+            case 'ai_win':
+                stats.aiWins++;
+                break;
+            case 'draw':
+                stats.draws++;
+                break;
+        }
+        
+        stats.winRate = (stats.humanWins / stats.gamesPlayed) * 100;
+        
+        this.saveStats(stats);
+    }
+    
+    /**
+     * Reset all statistics
+     */
+    resetStats(): void {
+        const defaultStats: GameStatistics = {
+            gamesPlayed: 0,
+            humanWins: 0,
+            aiWins: 0,
+            draws: 0,
+            winRate: 0
+        };
+        
+        this.saveStats(defaultStats);
+    }
+    
+    /**
+     * Save statistics to local storage
+     */
+    private saveStats(stats: GameStatistics): void {
+        try {
+            localStorage.setItem(this.storageKey, JSON.stringify(stats));
+        } catch (error) {
+            console.warn('Failed to save statistics:', error);
+        }
+    }
+}
 
 // Game state
 let currentGame: TicTacToe;
+let statisticsManager: StatisticsManager;
 
 /**
  * Initialize a new game with AI opponent
@@ -46,6 +137,39 @@ function initGame(): void {
 function getSelectedPlayerSide(): Player {
     const checkedInput = document.querySelector<HTMLInputElement>('input[name="player-side"]:checked');
     return (checkedInput?.value as Player) || 'X';
+}
+
+/**
+ * Update statistics display on page
+ */
+function updateStatisticsDisplay(): void {
+    const stats = statisticsManager.getStats();
+    
+    statGamesPlayed.textContent = stats.gamesPlayed.toString();
+    statHumanWins.textContent = stats.humanWins.toString();
+    statAIWins.textContent = stats.aiWins.toString();
+    statDraws.textContent = stats.draws.toString();
+    statWinRate.textContent = `${stats.winRate.toFixed(1)}%`;
+}
+
+/**
+ * Record game completion and update statistics
+ */
+function recordGameCompletion(): void {
+    if (currentGame.gameStatus === 'won') {
+        const winner = currentGame.winner;
+        const humanSide = currentGame.humanPlayerSide;
+        
+        if (winner === humanSide) {
+            statisticsManager.recordGameResult('human_win');
+        } else {
+            statisticsManager.recordGameResult('ai_win');
+        }
+    } else if (currentGame.gameStatus === 'draw') {
+        statisticsManager.recordGameResult('draw');
+    }
+    
+    updateStatisticsDisplay();
 }
 
 /**
@@ -165,6 +289,9 @@ function showResult(status: GameStatus, winner: Player | null): void {
         resultMessage.textContent = 'It\'s a draw! 🤝';
         resultMessage.className = 'draw';
     }
+    
+    // Record game completion for statistics
+    recordGameCompletion();
     
     disableBoard();
 }
@@ -295,8 +422,12 @@ function handleKeyDown(event: KeyboardEvent): void {
  * Initialize the demo when DOM is loaded
  */
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize game
+    // Initialize statistics manager
+    statisticsManager = new StatisticsManager();
+    
+    // Initialize game and statistics display
     initGame();
+    updateStatisticsDisplay();
     
     // Add event listeners
     cells.forEach(cell => {
@@ -315,6 +446,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add event listeners for side selection
     sideSelectionInputs.forEach(input => {
         input.addEventListener('change', initGame);
+    });
+    
+    // Add event listener for statistics reset
+    resetStatsBtn.addEventListener('click', () => {
+        if (confirm('Are you sure you want to reset all statistics?')) {
+            statisticsManager.resetStats();
+            updateStatisticsDisplay();
+        }
     });
     
     // Focus management for accessibility

@@ -74,6 +74,37 @@
                     <div id="winning-combination" class="win-highlight hidden"></div>
                 </div>
             </section>
+
+            <!-- Statistics Section -->
+            <section class="statistics" aria-label="Game statistics">
+                <h3>Statistics vs AI</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">Games Played:</span>
+                        <span id="stat-games-played" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Your Wins:</span>
+                        <span id="stat-human-wins" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">AI Wins:</span>
+                        <span id="stat-ai-wins" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Draws:</span>
+                        <span id="stat-draws" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item full-width">
+                        <span class="stat-label">Win Rate:</span>
+                        <span id="stat-win-rate" class="stat-value">0.0%</span>
+                    </div>
+                </div>
+                <button id="reset-stats-btn" class="control-btn reset-btn">
+                    <span class="btn-icon">🔄</span>
+                    <span class="btn-text">Reset Statistics</span>
+                </button>
+            </section>
         </main>
 
         <footer>
