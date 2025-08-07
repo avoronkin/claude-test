@@ -31,6 +31,17 @@ export interface Move {
   col: number;
 }
 
+/**
+ * Interface for game statistics against AI
+ */
+export interface GameStatistics {
+  gamesPlayed: number;
+  humanWins: number;
+  aiWins: number;
+  draws: number;
+  winRate: number; // Human win rate as percentage
+}
+
 /** Represents a cell on the board - can be empty (null) or contain a player's mark */
 export type Cell = Player | null;
 
