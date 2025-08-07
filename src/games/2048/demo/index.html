@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="2048 puzzle game implemented with TypeScript">
+    <meta name="author" content="2048 Game Demo">
+    <title>2048 Game</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>2048</h1>
+            <p>Join tiles with the same number to reach 2048!</p>
+        </header>
+
+        <main class="game-area">
+            <!-- Game Controls Section -->
+            <section class="game-controls" aria-label="Game controls">
+                <div class="control-buttons">
+                    <button id="new-game-btn" class="control-btn" aria-label="Start New Game">
+                        <span class="btn-text">New Game</span>
+                    </button>
+                    <button id="undo-btn" class="control-btn" aria-label="Undo Last Move" disabled>
+                        <span class="btn-text">Undo</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Game Stats Section -->
+            <section class="game-stats" aria-label="Game statistics">
+                <div class="stats-container">
+                    <div class="stat-item">
+                        <span class="stat-label">Score</span>
+                        <span id="score-display" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Moves</span>
+                        <span id="moves-display" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Time</span>
+                        <span id="time-display" class="stat-value">00:00</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Game Board Section -->
+            <section class="game-board-section" aria-label="Game board">
+                <div id="game-board" class="game-board" tabindex="0" role="grid" aria-label="2048 game board">
+                    <!-- 4x4 Grid - will be populated by JavaScript -->
+                    <div class="grid-row" role="row">
+                        <div class="grid-cell" role="gridcell" data-row="0" data-col="0"></div>
+                        <div class="grid-cell" role="gridcell" data-row="0" data-col="1"></div>
+                        <div class="grid-cell" role="gridcell" data-row="0" data-col="2"></div>
+                        <div class="grid-cell" role="gridcell" data-row="0" data-col="3"></div>
+                    </div>
+                    <div class="grid-row" role="row">
+                        <div class="grid-cell" role="gridcell" data-row="1" data-col="0"></div>
+                        <div class="grid-cell" role="gridcell" data-row="1" data-col="1"></div>
+                        <div class="grid-cell" role="gridcell" data-row="1" data-col="2"></div>
+                        <div class="grid-cell" role="gridcell" data-row="1" data-col="3"></div>
+                    </div>
+                    <div class="grid-row" role="row">
+                        <div class="grid-cell" role="gridcell" data-row="2" data-col="0"></div>
+                        <div class="grid-cell" role="gridcell" data-row="2" data-col="1"></div>
+                        <div class="grid-cell" role="gridcell" data-row="2" data-col="2"></div>
+                        <div class="grid-cell" role="gridcell" data-row="2" data-col="3"></div>
+                    </div>
+                    <div class="grid-row" role="row">
+                        <div class="grid-cell" role="gridcell" data-row="3" data-col="0"></div>
+                        <div class="grid-cell" role="gridcell" data-row="3" data-col="1"></div>
+                        <div class="grid-cell" role="gridcell" data-row="3" data-col="2"></div>
+                        <div class="grid-cell" role="gridcell" data-row="3" data-col="3"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Game Controls Instructions -->
+            <section class="instructions" aria-label="Game instructions">
+                <h2>How to Play</h2>
+                <p>Use arrow keys (<strong>↑↓←→</strong>) to move tiles in the desired direction.</p>
+                <p>When two tiles with the same number touch, they merge into one!</p>
+                <p>Reach the <strong>2048</strong> tile to win!</p>
+            </section>
+
+            <!-- Game Status Messages -->
+            <section class="game-status" aria-label="Game status">
+                <div id="status-message" class="status-message hidden" role="status" aria-live="polite">
+                    <!-- Game status messages will appear here -->
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Built with TypeScript • <a href="https://github.com" target="_blank" rel="noopener">View Source</a></p>
+        </footer>
+    </div>
+
+    <script type="module" src="./main.ts"></script>
+</body>
+</html>
